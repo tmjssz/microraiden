@@ -125,7 +125,7 @@ def get_logs(
         contract: Contract,
         event_name: str,
         from_block: Union[int, str] = 0,
-        to_block: Union[int, str] = 'pending',
+        to_block: Union[int, str] = 'latest',
         argument_filters: Dict[str, Any] = None
 ):
     event_abi = [
