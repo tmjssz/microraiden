@@ -4,7 +4,7 @@ from flask import Flask, safe_join
 from flask_restful import (
     Api,
 )
-
+from flask_cors import CORS
 
 from microraiden.channel_manager import (
     ChannelManager
@@ -55,6 +55,7 @@ class PaywalledProxy:
                 static_url_path=JSPREFIX_URL,
                 static_folder=paywall_js_dir
             )
+            cors = CORS(self.app, resources={r"/*": {"origins": "*"}})
         else:
             assert isinstance(flask_app, Flask)
             self.app = flask_app
