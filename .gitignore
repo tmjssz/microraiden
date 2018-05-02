@@ -92,3 +92,6 @@ smoketest_config.json
 
 # ignore tag files
 tags
+
+# mac os
+.DS_Store
