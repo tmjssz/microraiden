@@ -44,7 +44,7 @@ def spammer(web3, private_key: str = config.PRIVATE_KEY, nonce_offset: int = 0, 
         
         thread_log.info('Sent transactions = {}'.format(sent_txs))
         
-        while getattr(t, 'do_run', True) & (web3.eth.getTransactionCount(account_address, 'pending') < (first_nonce + sent_txs - min_pending_txs)):
+        while getattr(t, 'do_run', True) & (web3.eth.getTransactionCount(account_address, 'pending') < (first_nonce + sent_txs - min_pending_txs)) & (web3.eth.blockNumber < target_block):
             thread_log.info((first_nonce + sent_txs) - web3.eth.getTransactionCount(account_address, 'pending'))
             time.sleep(1)
 
@@ -118,18 +118,22 @@ def cheat_and_spam(channel, private_key: str = config.PRIVATE_KEY, challenge_per
     spam_thread.do_run = False
     spam_thread.join()
 
+    settle_tx_hash = settled_event['transactionHash']
+    settle_tx = channel.core.web3.eth.getTransaction(settle_tx_hash)
+
     # Print result
     print()
     print('-----------------------------------------------------------')
     print('Sender \t\t {}'.format(channel.core.address))
     print('Receiver \t {}'.format(channel.receiver))
     print()
-    print('OPENED block \t\t #{}'.format(channel.block))
-    print('CLOSED block \t\t #{}'.format(closed_event['blockNumber']))
-    print('SETTLED block \t\t #{}'.format(settled_event['blockNumber']))
+    print('OPENED block \t #{}'.format(channel.block))
+    print('CLOSED block \t #{}'.format(closed_event['blockNumber']))
+    print('SETTLED block \t #{}'.format(settled_event['blockNumber']))
     print()
     # print('Spam transactions \t {}'.format(number_txs))
-    print('CLOSE -> SETTLE \t {}'.format(settled_event['blockNumber']-closed_event['blockNumber']))
+    print('Settled by \t {}'.format(settle_tx['from']))
+    print('CLOSE->SETTLE \t {}'.format(settled_event['blockNumber']-closed_event['blockNumber']))
     print('-----------------------------------------------------------')
     print()
 
