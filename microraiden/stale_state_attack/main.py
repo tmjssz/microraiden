@@ -16,7 +16,7 @@ from utils import (
 import config as config
 from web3 import Web3, HTTPProvider
 from threading import Thread, currentThread
-import logging, click, json, time
+import logging, click, json, time, datetime
 
 def spammer(web3, private_key: str = config.PRIVATE_KEY, nonce_offset: int = 0, target_block: int = 0, batch_size: int = config.SPAM_BATCH_SIZE, min_pending_txs: int = config.MIN_PENDING_TXS, callback = None):
     thread_log = logging.getLogger('spammer')
@@ -28,7 +28,8 @@ def spammer(web3, private_key: str = config.PRIVATE_KEY, nonce_offset: int = 0, 
     sent_txs = 0
     current_block = web3.eth.blockNumber
 
-    while getattr(t, 'do_run', True) & (current_block < target_block):        
+    while getattr(t, 'do_run', True) & (current_block < target_block):
+        # Create signed spam transactions
         spam_txs = create_spam_transactions(
             private_key=private_key,
             web3=web3,
@@ -36,20 +37,23 @@ def spammer(web3, private_key: str = config.PRIVATE_KEY, nonce_offset: int = 0, 
             number=batch_size,
             min_nonce=first_nonce+sent_txs,
         )
+
+        # Send spam transactions
         thread_log.debug('Sending {} spam transactions...'.format(len(spam_txs)))
-        
         for tx in spam_txs:
             web3.eth.sendRawTransaction(tx)
             sent_txs += 1
         
         thread_log.info('Sent transactions = {}'.format(sent_txs))
-        
+
+        # Update target block
+        target_block = getattr(t, 'target_block', target_block)
         while getattr(t, 'do_run', True) & (web3.eth.getTransactionCount(account_address, 'pending') < (first_nonce + sent_txs - min_pending_txs)) & (web3.eth.blockNumber < target_block):
-            thread_log.info((first_nonce + sent_txs) - web3.eth.getTransactionCount(account_address, 'pending'))
             time.sleep(1)
 
         current_block = web3.eth.blockNumber
-        thread_log.info('Current block = {} / Target block = {}'.format(current_block, target_block))
+        thread_log.debug('Pending transactions = {}'.format((first_nonce + sent_txs) - web3.eth.getTransactionCount(account_address, 'pending')))
+        thread_log.info('Current block = {} / Target block = {} (remaining blocks = {})'.format(current_block, target_block, target_block - current_block))
         
     if getattr(t, 'do_run', True) & (callback is not None):
         callback(first_nonce+sent_txs)
@@ -97,6 +101,7 @@ def cheat_and_spam(channel, private_key: str = config.PRIVATE_KEY, challenge_per
     logging.info('Sending close transaction...')
     channel.core.web3.eth.sendRawTransaction(close_tx)
 
+    # Start transaction spamming in a thread
     logging.info('Starting network spamming for {} blocks...'.format(challenge_period))
     spam_thread = Thread(target=spammer, args=(channel.core.web3, private_key, 1, channel.core.web3.eth.blockNumber+challenge_period, batch_size, config.MIN_PENDING_TXS, lambda nonce: send_settle(channel, nonce),))
     spam_thread.start()
@@ -105,11 +110,8 @@ def cheat_and_spam(channel, private_key: str = config.PRIVATE_KEY, challenge_per
     closed_event = wait_for_close(channel)
     logging.info('Channel closed at block #{}'.format(closed_event['blockNumber']))
 
-    # Send spam transactions
-    # logging.info('Sending {} spam transactions...'.format(len(spam_txs)))
-    # for tx in spam_txs:
-    #     print(tx)
-    #     channel.core.web3.eth.sendRawTransaction(tx)
+    # Update target block for spamming thread
+    spam_thread.target_block = closed_event['blockNumber'] + challenge_period
     
     # Wait for channel to be settled
     settled_event = wait_for_settle(channel)
@@ -121,18 +123,29 @@ def cheat_and_spam(channel, private_key: str = config.PRIVATE_KEY, challenge_per
     settle_tx_hash = settled_event['transactionHash']
     settle_tx = channel.core.web3.eth.getTransaction(settle_tx_hash)
 
+    close_block = channel.core.web3.eth.getBlock(closed_event['blockNumber'])
+    settle_block = channel.core.web3.eth.getBlock(settled_event['blockNumber'])
+    elapsed_time = datetime.timedelta(seconds=settle_block['timestamp']-close_block['timestamp']) 
+
+    settled_by = settle_tx['from']
+    if (settled_by == channel.receiver):
+        settled_by = 'Receiver'
+    if (settled_by == channel.core.address):
+        settled_by = 'Sender'
+
     # Print result
     print()
     print('-----------------------------------------------------------')
     print('Sender \t\t {}'.format(channel.core.address))
     print('Receiver \t {}'.format(channel.receiver))
-    print()
     print('OPENED block \t #{}'.format(channel.block))
     print('CLOSED block \t #{}'.format(closed_event['blockNumber']))
     print('SETTLED block \t #{}'.format(settled_event['blockNumber']))
     print()
     # print('Spam transactions \t {}'.format(number_txs))
-    print('Settled by \t {}'.format(settle_tx['from']))
+    print('Settled by \t {}'.format(settled_by))
+    print('Settle balance \t {}'.format(settled_event['args']['_balance']))
+    print('Elapsed time \t {}'.format(str(elapsed_time)))
     print('CLOSE->SETTLE \t {}'.format(settled_event['blockNumber']-closed_event['blockNumber']))
     print('-----------------------------------------------------------')
     print()
