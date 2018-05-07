@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from microraiden import HTTPHeaders
 from microraiden.client.channel import Channel
 from microraiden.utils import (
@@ -162,7 +164,8 @@ def create_spam_transactions(private_key: str, web3: Web3 = None, account_addres
     for x in range(number):
         tx = create_signed_transaction(
             private_key=private_key,
-            web3=web3, to=account_address,
+            web3=web3, 
+            to=account_address,
             nonce=min_nonce+x,
             data=str(time.time()),
             gas_price=config.GAS_PRICE,

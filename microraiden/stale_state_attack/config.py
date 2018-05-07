@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 # private key of account that makes the attack
 PRIVATE_KEY = 'c87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3'
 
@@ -12,7 +14,6 @@ CHALLENGE_PERIOD = 500
 PROXY_URL = 'http://localhost:5000/echodyn/'
 
 # transaction settings
-SPAM_BATCH_SIZE = 500   # number of transactions to send at once
 MIN_PENDING_TXS = 1500  # minimum number of pending transactions during spamming period
 GAS_PRICE = 30000000000 # gas price to send transactions with
 GAS_LIMIT = 130000      # gas limit to send transactions with
