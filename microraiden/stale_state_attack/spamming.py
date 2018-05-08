@@ -30,11 +30,11 @@ class SpamManager(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        global tx_counter, target_block
+        global tx_counter
 
         tx_counter = 0
         initial_nonce = self.web3.eth.getTransactionCount(privkey_to_addr(self.private_key), 'pending') + self.nonce_offset
-        target_block = self.web3.eth.blockNumber + config.CHALLENGE_PERIOD
+        self.target_block = None
         self.do_run = True
 
         # Start Threads
@@ -49,22 +49,33 @@ class SpamManager(threading.Thread):
             self.threads.append(thread)
             thread.start()
         
-        while (self.do_run == True) & (self.web3.eth.blockNumber < target_block):
-            self.logger.debug('Current block = {} / Target block = {}'.format(self.web3.eth.blockNumber, target_block))
-            self.logger.info('Pending transactions = {} / Target block = {} / Remaining blocks = {}'.format(int(self.web3.txpool.status.pending, 16), target_block, target_block - self.web3.eth.blockNumber))
+        while (self.do_run == True) & (self.target_block_reached() == False):
+            if self.target_block is not None:
+                self.logger.debug('Current block = {} / Target block = {}'.format(self.web3.eth.blockNumber, self.target_block))
+                self.logger.info('Pending transactions = {} / Target block = {} / Remaining blocks = {}'.format(int(self.web3.txpool.status.pending, 16), self.target_block, self.target_block - self.web3.eth.blockNumber))
+            else:
+                self.logger.debug('Current block = {}'.format(self.web3.eth.blockNumber))
+                self.logger.info('Pending transactions = {}'.format(int(self.web3.txpool.status.pending, 16)))
             time.sleep(10)
         
         if self.do_run:
             self.callback(initial_nonce + tx_counter)
 
-    def update_target_block(self, new_target_block):
-        global target_block
-        target_block = new_target_block
+    def update_target_block(self, block):
+        self.target_block = block
+        for thread in self.threads:
+            thread.update_target_block(block)
+
+    def target_block_reached(self) -> bool:
+        if self.target_block is None:
+            return False
+        return self.web3.eth.blockNumber >= self.target_block
 
     def stop(self):
         self.do_run = False
         for thread in self.threads:
             thread.stop()
+        self.logger.info('Stopped network spamming')
 
 
 class SpamThread(threading.Thread):
@@ -99,16 +110,25 @@ class SpamThread(threading.Thread):
         )
     
     def run(self):
-        global tx_counter, target_block
+        global tx_counter
 
         self.do_run = True
+        self.target_block = None
 
-        while (self.do_run == True) & (self.web3.eth.blockNumber < target_block):
+        while (self.do_run == True) & (self.target_block_reached() == False):
             if int(self.web3.txpool.status.pending, 16) < self.min_pending_txs:
                 tx_counter += 1
                 nonce = self.initial_nonce + tx_counter - 1
                 tx = self.create_transaction(nonce)
                 self.web3.eth.sendRawTransaction(tx)
+    
+    def target_block_reached(self) -> bool:
+        if self.target_block is None:
+            return False
+        return self.web3.eth.blockNumber >= self.target_block
+    
+    def update_target_block(self, block):
+        self.target_block = block
     
     def stop(self):
         self.do_run = False

