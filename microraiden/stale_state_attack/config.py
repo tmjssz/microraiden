@@ -14,7 +14,7 @@ PROXY_URL = 'http://localhost:5000/echodyn/'
 
 # spamming settings
 CONGESTION_LEVEL = 10000 # number of pending transactions
-MIN_QUEUED_TXS = 15000  # minimum number of queued transactions
+MIN_QUEUED_TXS = 10000  # minimum number of queued transactions
 MAX_QUEUED_TXS = 50000  # maximum number of queued transactions
 
 WAIT_TIMEOUT = 36000    # timeout in seconds to wait for channel event confirmations

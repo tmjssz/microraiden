@@ -1,5 +1,16 @@
 #!/usr/bin/python
 
+import gevent
+import requests
+import logging
+import time
+import rlp
+from ethereum.transactions import Transaction
+from eth_utils import decode_hex, encode_hex
+from munch import Munch
+from web3 import Web3
+from web3.contract import Contract
+from typing import Union, List, Any
 from microraiden import HTTPHeaders
 from microraiden.client.channel import Channel
 from microraiden.utils import (
@@ -7,19 +18,16 @@ from microraiden.utils import (
     sign_transaction,
     get_event_blocking,
     create_transaction_data,
-    # create_signed_transaction,
-    # create_signed_contract_transaction,
 )
-from ethereum.transactions import Transaction
-from eth_utils import decode_hex, encode_hex
-from munch import Munch
-from web3 import Web3
-from web3.contract import Contract
-from typing import Union, List, Any
-import config as config
-import gevent, requests, logging, time, rlp
+from microraiden.stale_state_attack.config import (
+    GAS_LIMIT,
+    GAS_PRICE,
+    PROXY_URL,
+    WAIT_TIMEOUT,
+)
 
 log = logging.getLogger('channel_utils')
+
 
 def create_signed_transaction(
         private_key: str,
@@ -29,7 +37,7 @@ def create_signed_transaction(
         data=b'',
         nonce: int = None,
         gas_price: Union[int, None] = None,
-        gas_limit: int = config.GAS_LIMIT
+        gas_limit: int = GAS_LIMIT
 ) -> str:
     """
     Creates a signed on-chain transaction compliant with EIP155.
@@ -38,15 +46,16 @@ def create_signed_transaction(
 
     if nonce is None:
         nonce = web3.eth.getTransactionCount(from_, 'pending')
-    
+
     if gas_price is None:
-        gas_price = config.GAS_PRICE
+        gas_price = GAS_PRICE
 
     tx = Transaction(nonce, gas_price, gas_limit, to, value, data)
     tx.sender = decode_hex(from_)
 
     sign_transaction(tx, private_key, int(web3.version.network))
     return encode_hex(rlp.encode(tx))
+
 
 def create_signed_contract_transaction(
         private_key: str,
@@ -56,7 +65,7 @@ def create_signed_contract_transaction(
         value: int=0,
         nonce: int=None,
         gas_price: Union[int, None] = None,
-        gas_limit: int = config.GAS_LIMIT
+        gas_limit: int = GAS_LIMIT
 ) -> str:
     """
     Creates a signed on-chain contract transaction compliant with EIP155.
@@ -67,8 +76,8 @@ def create_signed_contract_transaction(
         nonce = contract.web3.eth.getTransactionCount(from_, 'pending')
 
     if gas_price is None:
-        gas_price = config.GAS_PRICE
-    
+        gas_price = GAS_PRICE
+
     data = create_transaction_data(contract, func_name, args)
 
     tx = Transaction(nonce, gas_price, gas_limit, contract.address, value, data)
@@ -76,6 +85,7 @@ def create_signed_contract_transaction(
 
     sign_transaction(tx, private_key, int(contract.web3.version.network))
     return encode_hex(rlp.encode(tx))
+
 
 def send_payment(channel, amount: int=0):
     '''
@@ -87,7 +97,7 @@ def send_payment(channel, amount: int=0):
     headers.sender_address = channel.sender
     headers.open_block = str(channel.block)
     headers = HTTPHeaders.serialize(headers)
-    response = requests.get(config.PROXY_URL + str(amount), headers=headers)
+    response = requests.get(PROXY_URL + str(amount), headers=headers)
     if response.status_code != 200:
         log.error(
             'Payment failed.\n'
@@ -96,6 +106,7 @@ def send_payment(channel, amount: int=0):
         )
     else:
         log.info('Successfull payment of {}'.format(amount))
+
 
 def create_close_channel_transaction(channel, balance=None):
     '''
@@ -122,9 +133,10 @@ def create_close_channel_transaction(channel, balance=None):
         ],
         value=0,
         nonce=None,
-        gas_price=config.GAS_PRICE,
-        gas_limit=config.GAS_LIMIT,
+        gas_price=GAS_PRICE,
+        gas_limit=GAS_LIMIT,
     )
+
 
 def create_settle_channel_transaction(channel, nonce=None):
     '''
@@ -136,7 +148,7 @@ def create_settle_channel_transaction(channel, nonce=None):
     log.info('Creating settle transaction for channel to {} created at block #{}.'.format(
         channel.receiver, channel.block
     ))
-    
+
     return create_signed_contract_transaction(
         private_key=channel.core.private_key,
         contract=channel.core.channel_manager,
@@ -147,33 +159,36 @@ def create_settle_channel_transaction(channel, nonce=None):
         ],
         value=0,
         nonce=nonce,
-        gas_price=config.GAS_PRICE,
-        gas_limit=config.GAS_LIMIT,
+        gas_price=GAS_PRICE,
+        gas_limit=GAS_LIMIT,
     )
+
 
 def create_spam_transactions(private_key: str, web3: Web3 = None, account_address: str = '', number: int = 100, min_nonce: int = None):
     '''
-    Create the given {number} of spam transactions from the account with the given {private_key} to the given {account_address}.
+    Create the given {number} of spam transactions from the account with the given {private_key}
+    to the given {account_address}.
     '''
     log.debug('Creating {} transactions...'.format(number))
     transactions = list()
-    
+
     if min_nonce is None:
         min_nonce = web3.eth.getTransactionCount(privkey_to_addr(private_key), 'pending')
-        
+
     for x in range(number):
         tx = create_signed_transaction(
             private_key=private_key,
-            web3=web3, 
+            web3=web3,
             to=account_address,
-            nonce=min_nonce+x,
+            nonce=min_nonce + x,
             data=str(time.time()),
-            gas_price=config.GAS_PRICE,
-            gas_limit=config.GAS_LIMIT
+            gas_price=GAS_PRICE,
+            gas_limit=GAS_LIMIT
         )
         transactions.append(tx)
-    
+
     return transactions
+
 
 def wait_for_blocks(web3, n: int=0):
     '''
@@ -182,6 +197,7 @@ def wait_for_blocks(web3, n: int=0):
     target_block = web3.eth.blockNumber + n
     while web3.eth.blockNumber < target_block:
         gevent.sleep(2)
+
 
 def wait_for_open(channel, confirmations: int=0):
     '''
@@ -192,7 +208,7 @@ def wait_for_open(channel, confirmations: int=0):
         channel.core.channel_manager,
         'ChannelCreated',
         from_block=channel.block,
-        timeout=config.WAIT_TIMEOUT,
+        timeout=WAIT_TIMEOUT,
         to_block='latest',
         argument_filters={
             '_sender_address': channel.core.address,
@@ -205,8 +221,9 @@ def wait_for_open(channel, confirmations: int=0):
         if (current_block - opened_event['blockNumber'] < confirmations):
             log.debug('Waiting for {} confirmations...'.format(confirmations))
             wait_for_blocks(channel.core.web3, confirmations)
-    
+
     return opened_event
+
 
 def wait_for_close(channel, confirmations: int=0):
     '''
@@ -218,7 +235,7 @@ def wait_for_close(channel, confirmations: int=0):
         channel.core.channel_manager,
         'ChannelCloseRequested',
         from_block=current_block + 1,
-        timeout=config.WAIT_TIMEOUT,
+        timeout=WAIT_TIMEOUT,
         argument_filters={
             '_sender_address': channel.sender,
             '_receiver_address': channel.receiver,
@@ -231,9 +248,10 @@ def wait_for_close(channel, confirmations: int=0):
         if (current_block - closed_event['blockNumber'] < confirmations):
             log.debug('Waiting for {} confirmations...'.format(confirmations))
             wait_for_blocks(channel.core.web3, confirmations)
-    
+
     channel.state = Channel.State.settling
     return closed_event
+
 
 def wait_for_settle(channel, confirmations: int=0):
     '''
@@ -245,7 +263,7 @@ def wait_for_settle(channel, confirmations: int=0):
         channel.core.channel_manager,
         'ChannelSettled',
         from_block=current_block + 1,
-        timeout=config.WAIT_TIMEOUT,
+        timeout=WAIT_TIMEOUT,
         argument_filters={
             '_sender_address': channel.sender,
             '_receiver_address': channel.receiver,
