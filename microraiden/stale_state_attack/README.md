@@ -13,7 +13,7 @@
     --rpcport INTEGER   Port of the RPC server
     --help              Show this message and exit.
   ```
-4. Run the attacker client: `python3 microraiden/stale_state_attack/main.py`
+4. Run the attacker client: `python3 -m microraiden.stale_state_attack.main`
   ```shell
   Usage: main.py [OPTIONS]
 

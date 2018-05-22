@@ -1,13 +1,9 @@
 #!/usr/bin/python
 
-import sys
-import os
 import logging
 import click
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '../..'))
-
 from web3 import Web3, HTTPProvider
-from cheater import Cheater
+from microraiden.stale_state_attack.cheater import Cheater
 
 
 @click.command()
