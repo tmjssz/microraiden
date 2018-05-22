@@ -11,7 +11,6 @@ from cheater import Cheater
 from microraiden.stale_state_attack.config import (
     PRIVATE_KEY,
     CHANNEL_MANAGER_ADDRESS,
-    CONGESTION_LEVEL
 )
 
 
@@ -37,7 +36,6 @@ def main(rpcaddr: str, rpcport: int):
         web3=web3,
         private_key=PRIVATE_KEY,
         channel_manager_address=CHANNEL_MANAGER_ADDRESS,
-        congestion_level=CONGESTION_LEVEL,
     )
 
     # Start stale state attack

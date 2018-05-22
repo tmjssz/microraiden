@@ -159,7 +159,7 @@ def create_settle_channel_transaction(channel, nonce=None):
         ],
         value=0,
         nonce=nonce,
-        gas_price=GAS_PRICE,
+        gas_price=int(GAS_PRICE * 1.1),
         gas_limit=GAS_LIMIT,
     )
 
