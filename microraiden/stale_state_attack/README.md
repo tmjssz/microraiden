@@ -27,7 +27,7 @@ The mechanism of revoking an uncooperative channel close during a timeout period
           start_sync_block=0
       ),
       ```
-3.  Start the microraiden echo server: `python3 -m microraiden.examples.echo_server`
+3.  Run the **echo server** proxy: `python3 -m microraiden.examples.echo_server`
 
     ```shell
     Usage: echo_server.py [OPTIONS]
