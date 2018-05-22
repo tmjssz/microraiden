@@ -22,7 +22,7 @@ from microraiden.utils import (
 from microraiden.stale_state_attack.config import (
     GAS_LIMIT,
     GAS_PRICE,
-    WAIT_TIMEOUT,
+    CONFIRMATION_TIMEOUT,
 )
 
 log = logging.getLogger('channel_utils')
@@ -208,7 +208,7 @@ def wait_for_open(channel, confirmations: int=0):
         channel.core.channel_manager,
         'ChannelCreated',
         from_block=channel.block,
-        timeout=WAIT_TIMEOUT,
+        timeout=CONFIRMATION_TIMEOUT,
         to_block='latest',
         argument_filters={
             '_sender_address': channel.core.address,
@@ -235,7 +235,7 @@ def wait_for_close(channel, confirmations: int=0):
         channel.core.channel_manager,
         'ChannelCloseRequested',
         from_block=current_block + 1,
-        timeout=WAIT_TIMEOUT,
+        timeout=CONFIRMATION_TIMEOUT,
         argument_filters={
             '_sender_address': channel.sender,
             '_receiver_address': channel.receiver,
@@ -263,7 +263,7 @@ def wait_for_settle(channel, confirmations: int=0):
         channel.core.channel_manager,
         'ChannelSettled',
         from_block=current_block + 1,
-        timeout=WAIT_TIMEOUT,
+        timeout=CONFIRMATION_TIMEOUT,
         argument_filters={
             '_sender_address': channel.sender,
             '_receiver_address': channel.receiver,
