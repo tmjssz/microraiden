@@ -3,8 +3,8 @@
 ## Run
 
 1. Start a local private network with at least one miner
-2. Deploy the microraiden contract in your local testnet, e.g. with this script: https://github.com/raiden-network/microraiden/blob/master/contracts/deploy/deploy_testnet.py
-    * There must be a configuration for the network id of your private network in `NETWORK_CONFIG_DEFAULTS`of https://github.com/raiden-network/microraiden/blob/master/microraiden/config.py
+2. Deploy the microraiden contract in your local testnet, e.g. with this script: https://github.com/tmjssz/microraiden/blob/master/contracts/deploy/deploy_testnet.py
+    * There must be a configuration for the network id of your private network in `NETWORK_CONFIG_DEFAULTS`of https://github.com/tmjssz/microraiden/blob/master/microraiden/config.py
         ```python
         # Example for network id = 15
         15: NetworkConfig(
@@ -40,12 +40,12 @@
 
 In order to deploy the microraiden contract with a challenge period < 500 for testing do the following:
 
-* Modify the contract constructor: https://github.com/raiden-network/microraiden/blob/master/contracts/contracts/RaidenMicroTransferChannels.sol
+* Modify the contract constructor: https://github.com/tmjssz/microraiden/blob/master/contracts/contracts/RaidenMicroTransferChannels.sol
     ```python
     require(_challenge_period >= 500); # define your desired value
     ```
   
-* Remove the following line, if you use the python script https://github.com/raiden-network/microraiden/blob/master/contracts/deploy/deploy_testnet.py
+* Remove the following line, if you use the python script https://github.com/tmjssz/microraiden/blob/master/contracts/deploy/deploy_testnet.py
     ```python
     assert challenge_period >= 500, 'Challenge period should be >= 500 blocks'
     ```
