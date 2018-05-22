@@ -38,6 +38,8 @@ The mechanism of revoking an uncooperative channel close during a timeout period
       --help              Show this message and exit.
     ```
 
+    * For more details on installing and running the proxy see: https://github.com/tmjssz/microraiden#quick-start
+
 4.  Run the attacker client: `python3 -m microraiden.stale_state_attack.main`
 
     ```shell
