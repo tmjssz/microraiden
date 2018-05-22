@@ -5,7 +5,6 @@ import time
 import logging
 from collections import deque
 from microraiden.stale_state_attack.config import (
-    PRIVATE_KEY,
     GAS_PRICE,
     GAS_LIMIT,
     BLOCK_SIZE,
@@ -22,7 +21,7 @@ class SpamManager(threading.Thread):
     def __init__(
         self,
         web3,
-        private_key: str=PRIVATE_KEY,
+        private_key: str,
         number_threads: int=1,
         nonce_offset: int=0,
         challenge_period: int=500,
@@ -174,7 +173,7 @@ class SpamThread(threading.Thread):
     def __init__(
         self,
         web3,
-        private_key: str = PRIVATE_KEY,
+        private_key: str,
         initial_nonce: int = 0,
     ):
         self.web3 = web3

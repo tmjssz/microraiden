@@ -13,11 +13,6 @@ from microraiden.stale_state_attack.utils import (
     wait_for_close,
     wait_for_settle,
 )
-from microraiden.stale_state_attack.config import (
-    PRIVATE_KEY,
-    CHANNEL_MANAGER_ADDRESS,
-    RECEIVER_ADDRESS,
-)
 
 
 class Cheater():
@@ -28,11 +23,15 @@ class Cheater():
     def __init__(
         self,
         web3,
-        private_key: str=PRIVATE_KEY,
-        channel_manager_address: str=CHANNEL_MANAGER_ADDRESS,
+        private_key: str,
+        channel_manager_address: str,
+        receiver: str,
+        proxy_address: str,
     ):
         self.web3 = web3
         self.private_key = private_key
+        self.receiver = receiver
+        self.proxy_address = proxy_address
         self.logger = logging.getLogger('cheater')
         self.channel = None
 
@@ -58,7 +57,7 @@ class Cheater():
         3) Close with zero balance
         '''
         # Get an open channel
-        self.initialize_channel(receiver=RECEIVER_ADDRESS, value=1)
+        self.initialize_channel(receiver=self.receiver, value=1)
 
         # Send an off-chain payment
         self.send_offchain_payment(amount=1)
@@ -72,7 +71,7 @@ class Cheater():
         # Start stale state attack
         self.state_stale_attack(balance=0)
 
-    def initialize_channel(self, receiver: str=RECEIVER_ADDRESS, value: int=1):
+    def initialize_channel(self, receiver: str, value: int):
         '''
         Get or open a new channel to the given receiver that can sustain the given transfer value.
         '''
@@ -91,12 +90,12 @@ class Cheater():
                 'Something failed, try again to wait for opened channel. Error: {}'.format(e))
             wait_for_open(channel=self.channel, confirmations=2)
 
-    def send_offchain_payment(self, amount: int=1):
+    def send_offchain_payment(self, amount: int):
         '''
         Send an offchain payment of the given {amount} through the channel.
         '''
         self.channel.create_transfer(amount)
-        send_payment(channel=self.channel, amount=amount)
+        send_payment(channel=self.channel, resource_url=self.proxy_address + '/echodyn/' + str(amount))
 
     def state_stale_attack(self, balance: int=0):
         '''

@@ -22,7 +22,6 @@ from microraiden.utils import (
 from microraiden.stale_state_attack.config import (
     GAS_LIMIT,
     GAS_PRICE,
-    PROXY_URL,
     WAIT_TIMEOUT,
 )
 
@@ -87,9 +86,10 @@ def create_signed_contract_transaction(
     return encode_hex(rlp.encode(tx))
 
 
-def send_payment(channel, amount: int=0):
+def send_payment(channel, resource_url: str):
     '''
-    Send an off-chain payment of the given amount through the given channel.
+    Send an off-chain payment through the given channel by sending a request 
+    to the given fee-based resource_url of the proxy.
     '''
     headers = Munch()
     headers.balance = str(channel.balance)
@@ -97,7 +97,7 @@ def send_payment(channel, amount: int=0):
     headers.sender_address = channel.sender
     headers.open_block = str(channel.block)
     headers = HTTPHeaders.serialize(headers)
-    response = requests.get(PROXY_URL + str(amount), headers=headers)
+    response = requests.get(resource_url, headers=headers)
     if response.status_code != 200:
         log.error(
             'Payment failed.\n'
@@ -105,7 +105,7 @@ def send_payment(channel, amount: int=0):
             .format(response.headers)
         )
     else:
-        log.info('Successfull payment of {}'.format(amount))
+        log.info('Off-chain payment successfull')
 
 
 def create_close_channel_transaction(channel, balance=None):
