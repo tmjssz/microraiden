@@ -17,7 +17,7 @@ The mechanism of revoking an uncooperative channel close during a timeout period
 
 ## Run Simulation
 
-1.  Install reqirements: https://github.com/tmjssz/microraiden#using-microraiden-in-pips-editable-mode
+1.  Install requirements. For details see: [Using microraiden in pip's editable mode](../../README.md#using-microraiden-in-pips-editable-mode)
 2.  Start a local private network with at least one miner and the deployed microraiden contract. This can be done with the python script in [geth-cluster](./geth-cluster).
 
 
