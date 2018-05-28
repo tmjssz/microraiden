@@ -12,7 +12,7 @@ This microraiden client simulates a stale state attack where a channel is uncoop
 5.  Send **settle** transaction and wait for its confirmation
 
 ## Problem Description
-['test'](../click_helpers.py)
+
 The mechanism of revoking an uncooperative channel close during a timeout period brings up a challenge that the microraiden protocol does not provide a solution for yet. After an uncooperative channel close, the counterparty's revoke transaction may not get mined on time in case of a blockchain congestion. A particularly high transaction load during the timeout period could fill up all respective blocks so that the revoke transaction is delayed and the channel gets settled with incorrect balances. This situation could also be initiated by a stale state attack where the attacker closes a channel with an old state and instantly spams the network with a large number of empty on-chain transactions in order to delay the revoke transaction. Another attack scenario could be that the attacker closes many different channels with outdated balances at the same time resulting in many on-chain transactions. All the defenders who try to dispute their channel's close request would have to compete with one another for available block space before the block timeout ends. This scenario is particularly problematic with hub-like network structures where single participants maintain a large number of state channels. Coupled with a spam attack the problem gets even more critical. Apart from a congested blockchain, the network gets confronted with a similar problem if corrupt miners refuse to mine revoke transactions or just create empty blocks.
 
 ## Run Simulation
@@ -21,7 +21,7 @@ The mechanism of revoking an uncooperative channel close during a timeout period
 2.  Start a local private network with at least one miner and the deployed microraiden contract. This can be done with the python script in [geth-cluster](./geth-cluster).
 
 
-    * If you run your own network, make sure to deploy the microraiden contract in your local testnet, e.g. with this script: https://github.com/tmjssz/microraiden/blob/master/contracts/deploy/deploy_testnet.py
+    * If you run your own network, make sure to deploy the microraiden contract in your local testnet, e.g. with this script: [deploy_testnet.py](../../contracts/deploy/deploy_testnet.py)
       * There must be a configuration for the network id of your private network in `NETWORK_CONFIG_DEFAULTS`of https://github.com/tmjssz/microraiden/blob/master/microraiden/config.py
 
 
