@@ -22,7 +22,7 @@ The mechanism of revoking an uncooperative channel close during a timeout period
 
 
     * If you run your own network, make sure to deploy the microraiden contract in your local testnet, e.g. with this script: [deploy_testnet.py](../../contracts/deploy/deploy_testnet.py)
-      * There must be a configuration for the network id of your private network in `NETWORK_CONFIG_DEFAULTS`of https://github.com/tmjssz/microraiden/blob/master/microraiden/config.py
+      * There must be a configuration for the network id of your private network in `NETWORK_CONFIG_DEFAULTS` of [config.py](../../microraiden/config.py)
 
 
       ```python
@@ -78,13 +78,13 @@ The mechanism of revoking an uncooperative channel close during a timeout period
 
 In order to deploy the microraiden contract with a challenge period < 500 for testing do the following:
 
-* Modify the contract constructor: https://github.com/tmjssz/microraiden/blob/master/contracts/contracts/RaidenMicroTransferChannels.sol
+* Modify the contract constructor: [RaidenMicroTransferChannels.sol](../../contracts/contracts/RaidenMicroTransferChannels.sol)
 
   ```python
   require(_challenge_period >= 500); # define your desired value
   ```
 
-* Remove the following line, if you use the python script https://github.com/tmjssz/microraiden/blob/master/contracts/deploy/deploy_testnet.py
+* Remove the following line, if you use the python script [deploy_testnet.py](../../contracts/deploy/deploy_testnet.py)
   ```python
   assert challenge_period >= 500, 'Challenge period should be >= 500 blocks'
   ```
