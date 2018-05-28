@@ -8,6 +8,30 @@ from microraiden.stale_state_attack.cheater import Cheater
 
 @click.command()
 @click.option(
+    '--channel-manager',
+    default='0xF12b5dd4EAD5F743C6BaA640B0216200e89B60Da',
+    help='Address of the channel manager contract.',
+    type=str
+)
+@click.option(
+    '--private-key',
+    required=True,
+    help='Hex-encoded private key.',
+    type=str
+)
+@click.option(
+    '--proxy-address',
+    default='http://127.0.0.1:5000',
+    help='Url of the microraiden echo server.',
+    type=str
+)
+@click.option(
+    '--receiver',
+    required=True,
+    help='Address of the account that the proxy is running with.',
+    type=str
+)
+@click.option(
     '--rpcaddr',
     default='http://127.0.0.1',
     help='Address of the RPC server.',
@@ -19,31 +43,7 @@ from microraiden.stale_state_attack.cheater import Cheater
     help='Port of the RPC server.',
     type=int
 )
-@click.option(
-    '--channel-manager',
-    default='0xF12b5dd4EAD5F743C6BaA640B0216200e89B60Da',
-    help='Address of the channel manager contract.',
-    type=str
-)
-@click.option(
-    '--receiver',
-    required=True,
-    help='Address of the account that the proxy is running with.',
-    type=str
-)
-@click.option(
-    '--proxy-address',
-    default='http://127.0.0.1:5000',
-    help='Url of the microraiden echo server.',
-    type=str
-)
-@click.option(
-    '--private-key',
-    required=True,
-    help='Hex-encoded private key.',
-    type=str
-)
-def main(rpcaddr: str, rpcport: int, channel_manager: str, receiver: str, proxy_address: str, private_key: str):
+def main(channel_manager: str, private_key: str, proxy_address: str, receiver: str, rpcaddr: str, rpcport: int):
     # Initialize web3
     web3 = Web3(HTTPProvider('{}:{}'.format(rpcaddr, rpcport)))
 
