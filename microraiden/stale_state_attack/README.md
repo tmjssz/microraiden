@@ -18,7 +18,8 @@ The mechanism of revoking an uncooperative channel close during a timeout period
 ## Run Simulation
 
 1.  Install reqirements: https://github.com/tmjssz/microraiden#using-microraiden-in-pips-editable-mode
-2.  Start a local private network with at least one miner and the deployed microraiden contract. This can be done with the python script in `./geth-cluster`.
+2.  Start a local private network with at least one miner and the deployed microraiden contract. This can be done with the python script in [geth-cluster](./geth-cluster).
+
 
     * If you run your own network, make sure to deploy the microraiden contract in your local testnet, e.g. with this script: https://github.com/tmjssz/microraiden/blob/master/contracts/deploy/deploy_testnet.py
       * There must be a configuration for the network id of your private network in `NETWORK_CONFIG_DEFAULTS`of https://github.com/tmjssz/microraiden/blob/master/microraiden/config.py
