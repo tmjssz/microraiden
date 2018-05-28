@@ -17,7 +17,8 @@ The mechanism of revoking an uncooperative channel close during a timeout period
 
 ## Run Simulation
 
-1.  Start a local private network with at least one miner and the deployed microraiden contract. This can be done with the python script in `./geth-cluster`.
+1.  Install reqirements: https://github.com/tmjssz/microraiden#using-microraiden-in-pips-editable-mode
+2.  Start a local private network with at least one miner and the deployed microraiden contract. This can be done with the python script in `./geth-cluster`.
 
     * If you run your own network, make sure to deploy the microraiden contract in your local testnet, e.g. with this script: https://github.com/tmjssz/microraiden/blob/master/contracts/deploy/deploy_testnet.py
       * There must be a configuration for the network id of your private network in `NETWORK_CONFIG_DEFAULTS`of https://github.com/tmjssz/microraiden/blob/master/microraiden/config.py
@@ -31,26 +32,26 @@ The mechanism of revoking an uncooperative channel close during a timeout period
       ),
       ```
 
-2.  Run the **echo server** proxy: `python3 -m microraiden.examples.echo_server`
+3.  Run the microraiden server: `python3 -m microraiden.stale_state_attack.server`
 
     ```shell
-    Usage: echo_server.py [OPTIONS]
+    Usage: server.py [OPTIONS]
 
     Options:
-      --private-key TEXT  The server's private key path.  [required]
-      --rpcport INTEGER   Port of the RPC server
-      --help              Show this message and exit.
+      --channel-manager TEXT  Address of the channel manager contract.
+      --private-key TEXT      Hex-encoded private key.  [required]
+      --rpcaddr TEXT          Address of the RPC server.
+      --rpcport INTEGER       Port of the RPC server
+      --help                  Show this message and exit.
     ```
 
-    With the testnet from `./geth-cluster` running, the command is:
+    With the testnet from `./geth-cluster` running, the command is e.g.:
 
     ```shell
-    python3 -m microraiden.examples.echo_server --private-key ./microraiden/stale_state_attack/geth-cluster/.blockchain/miner/keystore/UTC--2017-11-17T23-03-01.537330770Z--f17f52151ebef6c7334fad080c5704d77216b732 --rpcport 9546
+    python3 -m microraiden.stale_state_attack.server --private-key "0xae6ae8e5ccbfb04590405997ee2d52d2b330726137b875053c36d94e974d162f" --channel-manager "0xf25186B5081Ff5cE73482AD761DB0eB0d25abfBF" --rpcport 9546
     ```
 
-    * For more details on installing and running the proxy see: https://github.com/tmjssz/microraiden#quick-start
-
-3.  Run the attacker client: `python3 -m microraiden.stale_state_attack.main`
+4.  Run the attacker client: `python3 -m microraiden.stale_state_attack.main`
 
     ```shell
     Usage: main.py [OPTIONS]
@@ -66,10 +67,10 @@ The mechanism of revoking an uncooperative channel close during a timeout period
       --help                  Show this message and exit.
     ```
 
-    With the testnet from `./geth-cluster` running, the command is:
+    With the testnet from `./geth-cluster` running, the command is e.g.:
 
     ```shell
-    python3 -m microraiden.stale_state_attack.main --receiver "0xf17f52151ebef6c7334fad080c5704d77216b732" --private-key "c87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3" --channel-manager "0xf25186B5081Ff5cE73482AD761DB0eB0d25abfBF" --rpcport 9545
+    python3 -m microraiden.stale_state_attack.main --receiver "0xf17f52151EbEF6C7334FAD080c5704D77216b732" --private-key "c87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3" --channel-manager "0xf25186B5081Ff5cE73482AD761DB0eB0d25abfBF" --rpcport 9545
     ```
 
 ## Note
