@@ -95,7 +95,8 @@ class Cheater():
         Send an offchain payment of the given {amount} through the channel.
         '''
         self.channel.create_transfer(amount)
-        send_payment(channel=self.channel, resource_url=self.proxy_address + '/echodyn/' + str(amount))
+        send_payment(channel=self.channel,
+                     resource_url='{}/echo/{}'.format(self.proxy_address, amount))
 
     def state_stale_attack(self, balance: int=0):
         '''
