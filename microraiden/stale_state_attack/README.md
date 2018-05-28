@@ -17,9 +17,12 @@ The mechanism of revoking an uncooperative channel close during a timeout period
 
 ## Run Simulation
 
-1.  Start a local private network with at least one miner
-2.  Deploy the microraiden contract in your local testnet, e.g. with this script: https://github.com/tmjssz/microraiden/blob/master/contracts/deploy/deploy_testnet.py
-    * There must be a configuration for the network id of your private network in `NETWORK_CONFIG_DEFAULTS`of https://github.com/tmjssz/microraiden/blob/master/microraiden/config.py
+1.  Start a local private network with at least one miner and the deployed microraiden contract. This can be done with the python script in `./geth-cluster`.
+
+    * If you run your own network, make sure to deploy the microraiden contract in your local testnet, e.g. with this script: https://github.com/tmjssz/microraiden/blob/master/contracts/deploy/deploy_testnet.py
+      * There must be a configuration for the network id of your private network in `NETWORK_CONFIG_DEFAULTS`of https://github.com/tmjssz/microraiden/blob/master/microraiden/config.py
+
+
       ```python
       # Example for network id = 15
       15: NetworkConfig(
@@ -27,7 +30,8 @@ The mechanism of revoking an uncooperative channel close during a timeout period
           start_sync_block=0
       ),
       ```
-3.  Run the **echo server** proxy: `python3 -m microraiden.examples.echo_server`
+
+2.  Run the **echo server** proxy: `python3 -m microraiden.examples.echo_server`
 
     ```shell
     Usage: echo_server.py [OPTIONS]
@@ -40,7 +44,7 @@ The mechanism of revoking an uncooperative channel close during a timeout period
 
     * For more details on installing and running the proxy see: https://github.com/tmjssz/microraiden#quick-start
 
-4.  Run the attacker client: `python3 -m microraiden.stale_state_attack.main`
+3.  Run the attacker client: `python3 -m microraiden.stale_state_attack.main`
 
     ```shell
     Usage: main.py [OPTIONS]
