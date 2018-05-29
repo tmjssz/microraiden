@@ -5,7 +5,7 @@ This microraiden client simulates a stale state attack where a channel is uncoop
 1.  Open a channel with deposit=1 (or topup existing channel)
 2.  Send off-chain payment over that channel
     * Increase channel's balance to 1
-    * Send GET request to the `/echo/1` endpoint of the [server](./server.py)
+    * Send GET request to the `/echo/1` endpoint of [server.py](./server.py)
 3.  Send **uncooperative close** transaction with outdated balance=0
 4.  Start spamming the blockchain network via multiple threads
     * Continue spamming until challenge period is over
