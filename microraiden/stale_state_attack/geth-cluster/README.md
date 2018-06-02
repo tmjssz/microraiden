@@ -1,6 +1,14 @@
 # Ethereum dev network with µRaiden
 
-This repo contains a python script running a local Ethereum network with one miner and two light nodes for development use.
+This repo contains a python script running a local Ethereum network for development use. It runs of the following geth instances.
+
+| Node           | RPC port | Network port | Peers                          | Mining  |
+| -------------- | -------- | ------------ | ------------------------------ | ------- |
+| _Full node_    | 8545     | 30303        | _Light node 1_, _Light node 2_ | `True`  |
+| _Light node 1_ | 9545     | 30342        | _Full node_                    | `False` |
+| _Light node 2_ | 9546     | 30343        | _Full node_                    | `False` |
+
+The [µRaiden](https://github.com/raiden-network/microraiden) smart contracts are deployed
 
 ## Running network
 
