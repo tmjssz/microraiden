@@ -2,6 +2,47 @@
 
 This repo contains a python script running a local Ethereum network with one miner and two light nodes for development use.
 
+## Running network
+
+Before running do the following.
+
+```shell
+# Install virtual environment
+virtualenv -p python3 env
+
+# Activate virtual environment
+. env/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+Run the script with active virtual environment:
+
+```shell
+python3 main.py
+```
+
+## Options
+
+```shell
+Usage: main.py [OPTIONS]
+
+Options:
+  --data-dir TEXT        Data directory for the databases and keystore.
+  --networkid TEXT       Network identifier.
+  --passwords-file TEXT  Password file to use for non-interactive password
+                         input.
+  --reset                Reset the databases of all geth nodes.
+  --help                 Show this message and exit.
+```
+
+If you run the script with `--reset`, the blockchain will be reset to checkpoint state (which is contained in `blockchain.tar.gz`), so all changes made by the previous run will be rolled back. This is useful when running tests.
+
+By default, the two first accounts are unlocked when `geth` starts.
+
+## Network Info
+
 The bootstrapped network with these parameters is already included:
 
 ```
@@ -26,48 +67,15 @@ Ten accounts are already created and pre-allocated with Ξ999 each. These accoun
 0x5aeda56215b167893e80b4fe645ba6d5bab767de (private key 8d5366123cb560bb606379f90a0bfd4769eecc0557f1b362dcae9012b548b1e5, password 9)
 ```
 
-### Microraiden
+### µRaiden
 
-The [microraiden](https://github.com/raiden-network/microraiden) contracts are deployed in the bootstrapped network with the first account as owner:
+The bootstrapped already has the [µRaiden](https://github.com/raiden-network/microraiden) contracts deployed with the first account `0x627306090abaB3A6e1400e9345bC60c78a8BEf57` as owner:
 
-* Owner address: `0x627306090abaB3A6e1400e9345bC60c78a8BEf57`
-* CustomToken address: `0x8CdaF0CD259887258Bc13a92C0a6dA92698644C0`
+#### Contract with challenge period = 500 blocks
+
 * RaidenMicroTransferChannels address: `0xF12b5dd4EAD5F743C6BaA640B0216200e89B60Da`
+* CustomToken address: `0x8CdaF0CD259887258Bc13a92C0a6dA92698644C0`
 
-#### Contract with short challenge period (15 blocks)
+#### Contract with challenge period = 15 blocks
 
 * RaidenMicroTransferChannels address: `0xf25186B5081Ff5cE73482AD761DB0eB0d25abfBF`
-
-## Running network
-
-Before running do the following.
-
-```shell
-# Install virtual environment
-virtualenv -p python3 env
-
-# Activate virtual environment
-. env/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-Run the network by using the `main.py` Python script. 
-
-```shell
-Usage: main.py [OPTIONS]
-
-Options:
-  --data-dir TEXT        Data directory for the databases and keystore.
-  --networkid TEXT       Network identifier.
-  --passwords-file TEXT  Password file to use for non-interactive password
-                         input.
-  --reset                Reset the databases of all geth nodes.
-  --help                 Show this message and exit.
-```
-
-
-If you run the script with `--reset`, the blockchain will be reset to checkpoint state (which is contained in `blockchain.tar.gz`), so all changes made by the previous run will be rolled back. This is useful when running tests.
-
-By default, the two first accounts are unlocked when `geth` starts.
