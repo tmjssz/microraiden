@@ -8,7 +8,18 @@ This repo contains a python script running a local Ethereum network for developm
 | _Light node 1_ | 9545     | 30342        | _Full node_                    | `False` |
 | _Light node 2_ | 9546     | 30343        | _Full node_                    | `False` |
 
-The [µRaiden](https://github.com/raiden-network/microraiden) smart contracts are deployed
+### µRaiden
+
+The [µRaiden](https://github.com/raiden-network/microraiden) smart contracts are deployed in the bootstrapped network with the first account `0x627306090abaB3A6e1400e9345bC60c78a8BEf57` as owner:
+
+#### Contract with challenge period = 500 blocks
+
+* RaidenMicroTransferChannels address: `0xF12b5dd4EAD5F743C6BaA640B0216200e89B60Da`
+* CustomToken address: `0x8CdaF0CD259887258Bc13a92C0a6dA92698644C0`
+
+#### Contract with challenge period = 15 blocks
+
+* RaidenMicroTransferChannels address: `0xf25186B5081Ff5cE73482AD761DB0eB0d25abfBF`
 
 ## Running network
 
@@ -74,16 +85,3 @@ Ten accounts are already created and pre-allocated with Ξ999 each. These accoun
 0x6330a553fc93768f612722bb8c2ec78ac90b3bbc (private key 0f62d96d6675f32685bbdb8ac13cda7c23436f63efbb9d07700d8669ff12b7c4, password 8)
 0x5aeda56215b167893e80b4fe645ba6d5bab767de (private key 8d5366123cb560bb606379f90a0bfd4769eecc0557f1b362dcae9012b548b1e5, password 9)
 ```
-
-### µRaiden
-
-The bootstrapped network already has the [µRaiden](https://github.com/raiden-network/microraiden) contracts deployed with the first account `0x627306090abaB3A6e1400e9345bC60c78a8BEf57` as owner:
-
-#### Contract with challenge period = 500 blocks
-
-* RaidenMicroTransferChannels address: `0xF12b5dd4EAD5F743C6BaA640B0216200e89B60Da`
-* CustomToken address: `0x8CdaF0CD259887258Bc13a92C0a6dA92698644C0`
-
-#### Contract with challenge period = 15 blocks
-
-* RaidenMicroTransferChannels address: `0xf25186B5081Ff5cE73482AD761DB0eB0d25abfBF`
