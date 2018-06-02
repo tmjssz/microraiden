@@ -4,16 +4,16 @@ This microraiden client simulates a stale state attack where a channel is uncoop
 
 1.  Open a channel with deposit=1 (or topup existing channel)
 2.  Send off-chain payment over that channel
-    a. Increase channel's balance to 1
-    b. Send GET request to the `/echodyn/1` endpoint of the echo server proxy
+    * Increase channel's balance to 1
+    * Send GET request to the `/echo/1` endpoint of [server.py](./server.py)
 3.  Send **uncooperative close** transaction with outdated balance=0
-4.  Start spamming the blockchain network with multiple threads
+4.  Start spamming the blockchain network via multiple threads
     * Continue spamming until challenge period is over
 5.  Send **settle** transaction and wait for its confirmation
 
 ## Problem Description
 
-The mechanism of revoking an uncooperative channel close during a timeout period brings up a challenge that the microraiden protocol does not provide a solution for yet. After an uncooperative channel close, the counterparty's revoke transaction may not get mined on time in case of a blockchain congestion. A particularly high transaction load during the timeout period could fill up all respective blocks so that the revoke transaction is delayed and the channel gets settled with incorrect balances. This situation could also be initiated by a stale state attack where the attacker closes a channel with an old state and instantly spams the network with a large number of empty on-chain transactions in order to delay the revoke transaction. Another attack scenario could be that the attacker closes many different channels with outdated balances at the same time resulting in many on-chain transactions. All the defenders who try to dispute their channel's close request would have to compete with one another for available block space before the block timeout ends. This scenario is particularly problematic with hub-like network structures where single participants maintain a large number of state channels. Coupled with a spam attack the problem gets even more critical. Apart from a congested blockchain, the network gets confronted with a similar problem if corrupt miners refuse to mine revoke transactions or just create empty blocks.
+After a channel has been closed uncooperatively a challenge period starts, during which the counterparty can revoke the close request in case it contains an invalid balance. This mechanism brings up a challenge that the microraiden protocol does not provide a solution for yet: A particularly high transaction load during the timeout period could fill up all respective blocks so that the revoke transaction is delayed and the channel gets settled with incorrect balances. This situation could also be initiated by a stale state attack where the attacker closes a channel with an old state and instantly spams the network with a large number of empty on-chain transactions in order to delay the revoke transaction. Another attack scenario could be that the attacker closes many different channels with outdated balances at the same time resulting in many on-chain transactions. All the defenders who try to dispute their channel's close request would have to compete with one another for available block space before the block timeout ends. This scenario is particularly problematic with hub-like network structures where single participants maintain a large number of state channels. Coupled with a spam attack the problem gets even more critical. Apart from a congested blockchain, the network gets confronted with a similar problem if corrupt miners refuse to mine revoke transactions or just create empty blocks.
 
 ## Quick Start
 
