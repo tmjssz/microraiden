@@ -5,8 +5,8 @@ This repo contains a python script running a local Ethereum network for developm
 | Node           | RPC port | Network port | Peers                          | Mining  |
 | -------------- | -------- | ------------ | ------------------------------ | ------- |
 | _Full node_    | 8545     | 30303        | _Light node 1_, _Light node 2_ | ✓       |
-| _Light node 1_ | 9545     | 30342        | _Full node_                    | ×       |
-| _Light node 2_ | 9546     | 30343        | _Full node_                    | ×       |
+| _Light node 1_ | 9545     | 30342        | _Full node_                    | -       |
+| _Light node 2_ | 9546     | 30343        | _Full node_                    | -       |
 
 ### µRaiden
 
