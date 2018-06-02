@@ -1,4 +1,4 @@
-# Ethereum dev network with microraiden
+# Ethereum dev network with µRaiden
 
 This repo contains a python script running a local Ethereum network with one miner and two light nodes for development use.
 
@@ -69,7 +69,7 @@ Ten accounts are already created and pre-allocated with Ξ999 each. These accoun
 
 ### µRaiden
 
-The bootstrapped already has the [µRaiden](https://github.com/raiden-network/microraiden) contracts deployed with the first account `0x627306090abaB3A6e1400e9345bC60c78a8BEf57` as owner:
+The bootstrapped network already has the [µRaiden](https://github.com/raiden-network/microraiden) contracts deployed with the first account `0x627306090abaB3A6e1400e9345bC60c78a8BEf57` as owner:
 
 #### Contract with challenge period = 500 blocks
 
