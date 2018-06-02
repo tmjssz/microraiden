@@ -12,14 +12,10 @@ This repo contains a python script running a local Ethereum network for developm
 
 The [µRaiden](https://github.com/raiden-network/microraiden) smart contracts are deployed in the bootstrapped network with the first account `0x627306090abaB3A6e1400e9345bC60c78a8BEf57` as owner:
 
-#### Contract with challenge period = 500 blocks
-
-* RaidenMicroTransferChannels address: `0xF12b5dd4EAD5F743C6BaA640B0216200e89B60Da`
-* CustomToken address: `0x8CdaF0CD259887258Bc13a92C0a6dA92698644C0`
-
-#### Contract with challenge period = 15 blocks
-
-* RaidenMicroTransferChannels address: `0xf25186B5081Ff5cE73482AD761DB0eB0d25abfBF`
+| Challenge period | Address                                      |
+| ---------------- | -------------------------------------------- |
+| 500 blocks       | `0xF12b5dd4EAD5F743C6BaA640B0216200e89B60Da` |
+| 15 blocks        | `0xf25186B5081Ff5cE73482AD761DB0eB0d25abfBF` |
 
 ## Running network
 
