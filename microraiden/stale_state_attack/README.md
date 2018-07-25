@@ -24,6 +24,13 @@ After a channel has been closed uncooperatively a challenge period starts, durin
     ```shell
     python3 -m microraiden.stale_state_attack.server --private-key "0xae6ae8e5ccbfb04590405997ee2d52d2b330726137b875053c36d94e974d162f" --channel-manager "0xf25186B5081Ff5cE73482AD761DB0eB0d25abfBF" --rpcport 9546
     ```
+    
+    In case of an error, you might need to clear the server's database first.
+    
+    ```shell
+    rm ~/Library/Application\ Support/microraiden/echo_server.db
+    rm ~/Library/Application\ Support/microraiden/echo_server.db.lock
+    ```
 
 4.  Run the attack simulation (with active virtual environment):
 
