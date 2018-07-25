@@ -88,6 +88,22 @@ class Spammer(Thread):
             thread.stop()
         self.logger.info('Stopped network spamming')
 
+    def sending_pause(self):
+        '''
+        Stop to broadcast transactions.
+        '''
+        for thread in self.threads:
+            thread.do_send = False
+        self.logger.info('Spamming paused.')
+
+    def sending_continue(self):
+        '''
+        Start to broadcast transactions.
+        '''
+        for thread in self.threads:
+            thread.do_send = True
+        self.logger.info('Spamming continue.')
+
     def is_target_block_reached(self) -> bool:
         '''
         Returns True if the target block number has already been created.

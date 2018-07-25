@@ -76,12 +76,30 @@ class SpamManager():
         num_pending_transactions = int(self.web3.txpool.status.pending, 16)
         return max(0, min(self.desired_pending_txs() - num_pending_transactions, self.max_tx_queue_size))
 
-    def wait_for_full_tx_queue(self):
+    def wait_for_full_tx_queue(self, num_transactions: int=None):
         '''
         Wait until the queue of transactions to be sent next
         has reached the minimum number of transactions.
         '''
-        while len(self.tx_queue) < self.desired_queued_txs():
+        target_size = num_transactions
+        if target_size is None:
+            target_size = self.desired_queued_txs()
+
+        while len(self.tx_queue) < target_size:
+            time.sleep(1)
+
+    def wait_for_empty_tx_queue(self):
+        '''
+        Wait until the queue of transactions to be sent next is empty.
+        '''
+        while len(self.tx_queue) > 0:
+            time.sleep(1)
+
+    def wait_num_transactions_sent(self, num_transactions):
+        '''
+        Wait until the given number of transactions has been broadcasted.
+        '''
+        while self.tx_counter < num_transactions:
             time.sleep(1)
 
     def is_tx_queue_full(self) -> bool:
