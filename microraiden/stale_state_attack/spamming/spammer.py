@@ -5,6 +5,7 @@ import time
 from threading import Thread, active_count
 from web3 import Web3, HTTPProvider
 from .utils.crypto import privkey_to_addr
+from .utils.transaction import create_signed_transaction
 from .manager import SpamManager
 from .worker import SpamWorker
 
@@ -28,9 +29,12 @@ class Spammer(Thread):
 
         # Initialize web3
         self.web3 = Web3(HTTPProvider('{}:{}'.format(rpc_addr, rpc_port)))
+        self.network_id = int(self.web3.version.network)
 
-        initial_nonce = self.web3.eth.getTransactionCount(
-            privkey_to_addr(private_key), 'pending') + nonce_offset
+        self.private_key = private_key
+        self.account_address = privkey_to_addr(private_key)
+
+        initial_nonce = self.web3.eth.getTransactionCount(self.account_address, 'pending') + nonce_offset
 
         # Initialize spam manager.
         self.manager = SpamManager(
@@ -78,6 +82,33 @@ class Spammer(Thread):
                     num_pending_transactions, desired_pending_txs, num_queued_transactions, active_count()))
 
             time.sleep(3)
+    
+    def spam_tx(self, num_tx):
+        '''
+        Spam the network with the given number of transactions at once.
+        '''        
+        # Create trigger transaction.
+        nonce = self.manager.reserve_nonce()
+        trigger_tx = create_signed_transaction(
+            network_id=self.network_id,
+            private_key=self.private_key,
+            to=self.account_address,
+            nonce=nonce,
+            data=str(time.time()),
+        )
+
+        self.sending_continue()
+
+        self.logger.info(
+            'Spamming the network with {} transactions...'
+            .format(num_tx)
+        )
+        self.manager.wait_num_transactions_sent(num_tx)
+
+        self.sending_pause()
+
+        # Send trigger transaction
+        self.web3.eth.sendRawTransaction(trigger_tx)
 
     def stop(self):
         '''
@@ -94,7 +125,7 @@ class Spammer(Thread):
         '''
         for thread in self.threads:
             thread.do_send = False
-        self.logger.info('Spamming paused.')
+        self.logger.info('Pause spamming.')
 
     def sending_continue(self):
         '''
@@ -102,7 +133,7 @@ class Spammer(Thread):
         '''
         for thread in self.threads:
             thread.do_send = True
-        self.logger.info('Spamming continue.')
+        self.logger.info('Start spamming.')
 
     def is_target_block_reached(self) -> bool:
         '''

@@ -225,7 +225,10 @@ class Cheater():
 
     def settle_after_challenge_period(self, settle_block):
         # Wait until challenge period passed
-        self.logger.info('Waiting until challenge period is over...')
+        self.logger.info(
+            'Waiting until challenge period = {} blocks is over...'
+            .format(self.challenge_period)
+        )
         wait_for_block_generation(self.web3, settle_block)
         self.logger.info('Challenge period is over.')
 
