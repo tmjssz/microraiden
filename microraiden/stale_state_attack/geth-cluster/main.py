@@ -99,8 +99,6 @@ def main(data_dir: str, networkid: str, passwords_file: str, reset: bool):
     geth_light_node_1.start()
     geth_light_node_2.start()
 
-    print('Started geth processes')
-
     geth_miner.wait_for_rpc(timeout=30)
     geth_light_node_1.wait_for_rpc(timeout=30)
     geth_light_node_2.wait_for_rpc(timeout=30)
@@ -112,25 +110,26 @@ def main(data_dir: str, networkid: str, passwords_file: str, reset: bool):
     web3_light1.admin.addPeer(web3_miner.admin.nodeInfo.enode)
     web3_light2.admin.addPeer(web3_miner.admin.nodeInfo.enode)
 
-    print('Connected peers')
-
-    print('\n---------------------------------------------')
-    print('RPC Endpoints:')
-    print('..............')
-    print('- Miner: \t\thttp://{}:{}'.format(geth_miner.rpc_host, geth_miner.rpc_port))
-    print('- Light Node 1: \thttp://{}:{}'.format(geth_light_node_1.rpc_host, geth_light_node_1.rpc_port))
-    print('- Light Node 2: \thttp://{}:{}'.format(geth_light_node_2.rpc_host, geth_light_node_2.rpc_port))
-    print('\nMicroraiden Channel Manager Contract:')
-    print('.....................................')
-    print('\nChallenge period = 500 blocks:')
-    print('- 0xF12b5dd4EAD5F743C6BaA640B0216200e89B60Da')
-    print('\nChallenge period = 15 blocks:')
-    print('- 0xf25186B5081Ff5cE73482AD761DB0eB0d25abfBF')
-    print('\nAccounts:')
-    print('.........')
-    for acc in web3_miner.eth.accounts:
-        print('- {}'.format(acc))
-    print('---------------------------------------------')
+    print()
+    print('Started network peers at http://{}'.format(geth_miner.rpc_host))
+    print()
+    print('Connected peers:')
+    print('| Node         | RPC port | Network port | Peers                      | Mining |')
+    print('| ------------ | -------- | ------------ | -------------------------- | ------ |')
+    print('| Full node    | {}     | 30303        | Light node 1, Light node 2 | {}   |'.format(geth_miner.rpc_port, geth_miner.is_mining))
+    print('| Light node 1 | {}     | 30342        | Full node                  | {}  |'.format(geth_light_node_1.rpc_port, geth_light_node_1.is_mining))
+    print('| Light node 2 | {}     | 30343        | Full node                  | {}  |'.format(geth_light_node_2.rpc_port, geth_light_node_2.is_mining))
+    print()
+    print('Microraiden Channel Manager:')
+    print('| Challenge period | Contract address                           |')
+    print('| ---------------- | ------------------------------------------ |')
+    print('|       500 blocks | 0xF12b5dd4EAD5F743C6BaA640B0216200e89B60Da | ')
+    print('|        15 blocks | 0xf25186B5081Ff5cE73482AD761DB0eB0d25abfBF | ')
+    print()
+    print('Accounts:')
+    for i, acc in enumerate(web3_miner.eth.accounts):
+        print('({}) {}'.format(i, acc))
+    print()
 
     while True:
         pass
