@@ -4,8 +4,8 @@ import logging
 import time
 from threading import Thread, active_count
 from web3 import Web3, HTTPProvider
-from .utils.crypto import privkey_to_addr
-from .utils.transaction import create_signed_transaction
+from .crypto import privkey_to_addr
+from ...utils import create_signed_transaction
 from .manager import SpamManager
 from .worker import SpamWorker
 
@@ -90,11 +90,12 @@ class Spammer(Thread):
         # Create trigger transaction.
         nonce = self.manager.reserve_nonce()
         trigger_tx = create_signed_transaction(
-            network_id=self.network_id,
+            web3=self.web3,
             private_key=self.private_key,
             to=self.account_address,
-            nonce=nonce,
             data=str(time.time()),
+            gas_price=21000000000, # proxy sends transactions with 20000000000
+            nonce=nonce,
         )
 
         self.sending_continue()

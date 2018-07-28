@@ -7,7 +7,7 @@ from threading import Thread
 from microraiden import Client
 from microraiden.utils import privkey_to_addr
 from microraiden.stale_state_attack.utils import (
-    send_payment,
+    send_offchain_payment,
     create_close_channel_transaction,
     create_settle_channel_transaction,
     wait_for_open,
@@ -112,7 +112,7 @@ class Cheater():
         Send an offchain payment of the given {amount} through the channel.
         '''
         self.channel.create_transfer(amount)
-        send_payment(
+        send_offchain_payment(
             channel=self.channel,
             resource_url='{}/echo/{}'.format(self.proxy_address, amount)
         )
@@ -185,6 +185,7 @@ class Cheater():
         # Extract some interesting information
         close_block = self.web3.eth.getBlock(closed_event['blockNumber'])
         settle_block = self.web3.eth.getBlock(settled_event['blockNumber'])
+        elapsed_time = None
         if (close_block is not None) & (settle_block is not None):
             elapsed_time = datetime.timedelta(
                 seconds=settle_block['timestamp'] - close_block['timestamp']
@@ -233,11 +234,7 @@ class Cheater():
         self.logger.info('Challenge period is over.')
 
         # Create settle transaction
-        settle_nonce = self.web3.eth.getTransactionCount(
-            privkey_to_addr(self.private_key),
-            'pending'
-        )
-        settle_tx = create_settle_channel_transaction(self.channel, settle_nonce)
+        settle_tx = create_settle_channel_transaction(self.channel)
 
         try:
             # Send settle transaction
