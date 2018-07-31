@@ -8,6 +8,7 @@ import rlp
 from ethereum.transactions import Transaction
 from eth_utils import decode_hex, encode_hex
 from munch import Munch
+from urllib3.exceptions import HTTPError
 from web3 import Web3
 from web3.contract import Contract
 from typing import List, Any
@@ -22,6 +23,7 @@ from microraiden.utils import (
 
 log = logging.getLogger('channel_utils')
 
+
 def send_offchain_payment(channel, resource_url: str):
     '''
     Send an off-chain payment through the given channel by sending a request 
@@ -33,15 +35,11 @@ def send_offchain_payment(channel, resource_url: str):
     headers.sender_address = channel.sender
     headers.open_block = str(channel.block)
     headers = HTTPHeaders.serialize(headers)
+
     response = requests.get(resource_url, headers=headers)
+
     if response.status_code != 200:
-        log.error(
-            'Payment failed.\n'
-            'Response headers: {}'
-            .format(response.headers)
-        )
-    else:
-        log.info('Off-chain payment successfull')
+        raise HTTPError(response.status_code, response.headers)
 
 
 def create_signed_transaction(

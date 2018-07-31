@@ -4,6 +4,7 @@ import logging
 import time
 import datetime
 from threading import Thread
+from urllib3.exceptions import HTTPError
 from microraiden import Client
 from microraiden.utils import privkey_to_addr
 from microraiden.stale_state_attack.utils import (
@@ -79,7 +80,39 @@ class Cheater():
         self.initialize_channel(receiver=self.receiver, value=1)
 
         # Send an off-chain payment
-        self.send_offchain_payment(amount=1)
+        try:
+            self.send_offchain_payment(amount=1)
+        except HTTPError as e:
+            status_code = e.args[0]
+            if status_code == 402:
+                # In case the payment is not accepted, try to close the channel
+                # and open a new one.
+                self.logger.info(
+                    'Sender\'s balance in channel is too small. Closing and opening a new channel.')
+                self.channel.close()
+                # Open a new channel
+                self.initialize_channel(receiver=self.receiver, value=1)
+                try:
+                    # Retry off-chain payment.
+                    self.send_offchain_payment(amount=1)
+                except HTTPError as e:
+                    response_headers = e.args[1]
+                    self.logger.error(
+                        'Payment failed again.\n'
+                        'Response headers: {}'
+                        .format(response_headers)
+                    )
+                    return
+            else:
+                response_headers = e.args[1]
+                self.logger.error(
+                    'Payment failed.\n'
+                    'Response headers: {}'
+                    .format(response_headers)
+                )
+                return
+
+        self.logger.info('Off-chain payment successfull')
 
         # Start stale state attack
         self.state_stale_attack(balance=0)
@@ -111,6 +144,7 @@ class Cheater():
         '''
         Send an offchain payment of the given {amount} through the channel.
         '''
+        assert (amount > self.channel.balance), 'Balance must be greater than the current channel balance.'
         self.channel.create_transfer(amount)
         send_offchain_payment(
             channel=self.channel,
