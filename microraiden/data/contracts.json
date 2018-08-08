@@ -1,24 +1,20 @@
 {
     "CustomToken": {
-        "abi": [
-            {
+        "abi": [{
                 "constant": true,
                 "inputs": [],
                 "name": "name",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "string"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "string"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_spender",
                         "type": "address"
                     },
@@ -28,12 +24,10 @@
                     }
                 ],
                 "name": "approve",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "bool"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "bool"
+                }],
                 "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "function"
@@ -51,12 +45,10 @@
                 "constant": true,
                 "inputs": [],
                 "name": "totalSupply",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "uint256"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "uint256"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
@@ -65,20 +57,17 @@
                 "constant": true,
                 "inputs": [],
                 "name": "multiplier",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "uint256"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "uint256"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_from",
                         "type": "address"
                     },
@@ -92,12 +81,10 @@
                     }
                 ],
                 "name": "transferFrom",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "bool"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "bool"
+                }],
                 "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "function"
@@ -106,12 +93,10 @@
                 "constant": true,
                 "inputs": [],
                 "name": "decimals",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "uint8"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "uint8"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
@@ -129,31 +114,25 @@
                 "constant": true,
                 "inputs": [],
                 "name": "version",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "string"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "string"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": true,
-                "inputs": [
-                    {
-                        "name": "_owner",
-                        "type": "address"
-                    }
-                ],
+                "inputs": [{
+                    "name": "_owner",
+                    "type": "address"
+                }],
                 "name": "balanceOf",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "uint256"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "uint256"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
@@ -162,12 +141,10 @@
                 "constant": true,
                 "inputs": [],
                 "name": "owner_address",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "address"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "address"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
@@ -176,20 +153,17 @@
                 "constant": true,
                 "inputs": [],
                 "name": "symbol",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "string"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "string"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_to",
                         "type": "address"
                     },
@@ -199,20 +173,17 @@
                     }
                 ],
                 "name": "transfer",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "bool"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "bool"
+                }],
                 "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "function"
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_to",
                         "type": "address"
                     },
@@ -226,20 +197,17 @@
                     }
                 ],
                 "name": "transfer",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "bool"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "bool"
+                }],
                 "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "function"
             },
             {
                 "constant": true,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_owner",
                         "type": "address"
                     },
@@ -249,19 +217,16 @@
                     }
                 ],
                 "name": "allowance",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "uint256"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "uint256"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "initial_supply",
                         "type": "uint256"
                     },
@@ -284,8 +249,7 @@
             },
             {
                 "anonymous": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "indexed": true,
                         "name": "_to",
                         "type": "address"
@@ -301,8 +265,7 @@
             },
             {
                 "anonymous": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "indexed": true,
                         "name": "_from",
                         "type": "address"
@@ -323,8 +286,7 @@
             },
             {
                 "anonymous": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "indexed": true,
                         "name": "_owner",
                         "type": "address"
@@ -356,25 +318,21 @@
             },
             "language": "Solidity",
             "output": {
-                "abi": [
-                    {
+                "abi": [{
                         "constant": true,
                         "inputs": [],
                         "name": "name",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "string"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "string"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
                     },
                     {
                         "constant": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_spender",
                                 "type": "address"
                             },
@@ -384,12 +342,10 @@
                             }
                         ],
                         "name": "approve",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "bool"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "bool"
+                        }],
                         "payable": false,
                         "stateMutability": "nonpayable",
                         "type": "function"
@@ -407,12 +363,10 @@
                         "constant": true,
                         "inputs": [],
                         "name": "totalSupply",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "uint256"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "uint256"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
@@ -421,20 +375,17 @@
                         "constant": true,
                         "inputs": [],
                         "name": "multiplier",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "uint256"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "uint256"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
                     },
                     {
                         "constant": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_from",
                                 "type": "address"
                             },
@@ -448,12 +399,10 @@
                             }
                         ],
                         "name": "transferFrom",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "bool"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "bool"
+                        }],
                         "payable": false,
                         "stateMutability": "nonpayable",
                         "type": "function"
@@ -462,12 +411,10 @@
                         "constant": true,
                         "inputs": [],
                         "name": "decimals",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "uint8"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "uint8"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
@@ -485,31 +432,25 @@
                         "constant": true,
                         "inputs": [],
                         "name": "version",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "string"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "string"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
                     },
                     {
                         "constant": true,
-                        "inputs": [
-                            {
-                                "name": "_owner",
-                                "type": "address"
-                            }
-                        ],
+                        "inputs": [{
+                            "name": "_owner",
+                            "type": "address"
+                        }],
                         "name": "balanceOf",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "uint256"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "uint256"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
@@ -518,12 +459,10 @@
                         "constant": true,
                         "inputs": [],
                         "name": "owner_address",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "address"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "address"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
@@ -532,20 +471,17 @@
                         "constant": true,
                         "inputs": [],
                         "name": "symbol",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "string"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "string"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
                     },
                     {
                         "constant": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_to",
                                 "type": "address"
                             },
@@ -555,20 +491,17 @@
                             }
                         ],
                         "name": "transfer",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "bool"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "bool"
+                        }],
                         "payable": false,
                         "stateMutability": "nonpayable",
                         "type": "function"
                     },
                     {
                         "constant": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_to",
                                 "type": "address"
                             },
@@ -582,20 +515,17 @@
                             }
                         ],
                         "name": "transfer",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "bool"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "bool"
+                        }],
                         "payable": false,
                         "stateMutability": "nonpayable",
                         "type": "function"
                     },
                     {
                         "constant": true,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_owner",
                                 "type": "address"
                             },
@@ -605,19 +535,16 @@
                             }
                         ],
                         "name": "allowance",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "uint256"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "uint256"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
                     },
                     {
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "initial_supply",
                                 "type": "uint256"
                             },
@@ -640,8 +567,7 @@
                     },
                     {
                         "anonymous": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "indexed": true,
                                 "name": "_to",
                                 "type": "address"
@@ -657,8 +583,7 @@
                     },
                     {
                         "anonymous": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "indexed": true,
                                 "name": "_from",
                                 "type": "address"
@@ -679,8 +604,7 @@
                     },
                     {
                         "anonymous": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "indexed": true,
                                 "name": "_owner",
                                 "type": "address"
@@ -821,25 +745,21 @@
         "source_path": "contracts/test/CustomToken.sol"
     },
     "Delegate": {
-        "abi": [
-            {
+        "abi": [{
                 "constant": true,
                 "inputs": [],
                 "name": "microraiden",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "address"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "address"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_deposit",
                         "type": "uint192"
                     },
@@ -856,8 +776,7 @@
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_sender_address",
                         "type": "address"
                     },
@@ -882,8 +801,7 @@
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_token_address",
                         "type": "address"
                     },
@@ -900,8 +818,7 @@
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_sender_address",
                         "type": "address"
                     },
@@ -922,8 +839,7 @@
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_deposit",
                         "type": "uint192"
                     },
@@ -942,12 +858,10 @@
                 "constant": true,
                 "inputs": [],
                 "name": "token",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "address"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "address"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
@@ -965,25 +879,21 @@
             },
             "language": "Solidity",
             "output": {
-                "abi": [
-                    {
+                "abi": [{
                         "constant": true,
                         "inputs": [],
                         "name": "microraiden",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "address"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "address"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
                     },
                     {
                         "constant": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_deposit",
                                 "type": "uint192"
                             },
@@ -1000,8 +910,7 @@
                     },
                     {
                         "constant": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_sender_address",
                                 "type": "address"
                             },
@@ -1026,8 +935,7 @@
                     },
                     {
                         "constant": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_token_address",
                                 "type": "address"
                             },
@@ -1044,8 +952,7 @@
                     },
                     {
                         "constant": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_sender_address",
                                 "type": "address"
                             },
@@ -1066,8 +973,7 @@
                     },
                     {
                         "constant": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_deposit",
                                 "type": "uint192"
                             },
@@ -1086,12 +992,10 @@
                         "constant": true,
                         "inputs": [],
                         "name": "token",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "address"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "address"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
@@ -1195,11 +1099,9 @@
         "source_path": "contracts/lib/ECVerify.sol"
     },
     "ECVerifyTest": {
-        "abi": [
-            {
+        "abi": [{
                 "constant": true,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_message",
                         "type": "bytes32"
                     },
@@ -1209,20 +1111,17 @@
                     }
                 ],
                 "name": "verify",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "address"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "address"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "hash",
                         "type": "bytes32"
                     },
@@ -1240,20 +1139,17 @@
                     }
                 ],
                 "name": "verify_ecrecover_output",
-                "outputs": [
-                    {
-                        "name": "signature_address",
-                        "type": "address"
-                    }
-                ],
+                "outputs": [{
+                    "name": "signature_address",
+                    "type": "address"
+                }],
                 "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "function"
             },
             {
                 "constant": true,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_address",
                         "type": "address"
                     },
@@ -1271,12 +1167,10 @@
                     }
                 ],
                 "name": "verifyEthSignedTypedData",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "address"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "address"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
@@ -1294,11 +1188,9 @@
             },
             "language": "Solidity",
             "output": {
-                "abi": [
-                    {
+                "abi": [{
                         "constant": true,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_message",
                                 "type": "bytes32"
                             },
@@ -1308,20 +1200,17 @@
                             }
                         ],
                         "name": "verify",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "address"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "address"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
                     },
                     {
                         "constant": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "hash",
                                 "type": "bytes32"
                             },
@@ -1339,20 +1228,17 @@
                             }
                         ],
                         "name": "verify_ecrecover_output",
-                        "outputs": [
-                            {
-                                "name": "signature_address",
-                                "type": "address"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "signature_address",
+                            "type": "address"
+                        }],
                         "payable": false,
                         "stateMutability": "nonpayable",
                         "type": "function"
                     },
                     {
                         "constant": true,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_address",
                                 "type": "address"
                             },
@@ -1370,12 +1256,10 @@
                             }
                         ],
                         "name": "verifyEthSignedTypedData",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "address"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "address"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
@@ -1420,30 +1304,27 @@
         "source_path": "contracts/test/ECVerifyTest.sol"
     },
     "ERC223ReceivingContract": {
-        "abi": [
-            {
-                "constant": false,
-                "inputs": [
-                    {
-                        "name": "_from",
-                        "type": "address"
-                    },
-                    {
-                        "name": "_value",
-                        "type": "uint256"
-                    },
-                    {
-                        "name": "_data",
-                        "type": "bytes"
-                    }
-                ],
-                "name": "tokenFallback",
-                "outputs": [],
-                "payable": false,
-                "stateMutability": "nonpayable",
-                "type": "function"
-            }
-        ],
+        "abi": [{
+            "constant": false,
+            "inputs": [{
+                    "name": "_from",
+                    "type": "address"
+                },
+                {
+                    "name": "_value",
+                    "type": "uint256"
+                },
+                {
+                    "name": "_data",
+                    "type": "bytes"
+                }
+            ],
+            "name": "tokenFallback",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        }],
         "bytecode": "0x",
         "bytecode_runtime": "0x",
         "direct_dependencies": [],
@@ -1456,11 +1337,9 @@
         "source_path": "contracts/test/ERC223ReceivingContract.sol"
     },
     "RaidenMicroTransferChannels": {
-        "abi": [
-            {
+        "abi": [{
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_receiver_address",
                         "type": "address"
                     },
@@ -1483,20 +1362,17 @@
                 "constant": true,
                 "inputs": [],
                 "name": "challenge_period",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "uint32"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "uint32"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": true,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_sender_address",
                         "type": "address"
                     },
@@ -1510,8 +1386,7 @@
                     }
                 ],
                 "name": "getChannelInfo",
-                "outputs": [
-                    {
+                "outputs": [{
                         "name": "",
                         "type": "bytes32"
                     },
@@ -1538,8 +1413,7 @@
             },
             {
                 "constant": true,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_receiver_address",
                         "type": "address"
                     },
@@ -1557,20 +1431,17 @@
                     }
                 ],
                 "name": "extractBalanceProofSignature",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "address"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "address"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_receiver_address",
                         "type": "address"
                     },
@@ -1599,8 +1470,7 @@
             },
             {
                 "constant": true,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_sender_address",
                         "type": "address"
                     },
@@ -1618,24 +1488,20 @@
                     }
                 ],
                 "name": "extractClosingSignature",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "address"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "address"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
-                        "name": "_trusted_contracts",
-                        "type": "address[]"
-                    }
-                ],
+                "inputs": [{
+                    "name": "_trusted_contracts",
+                    "type": "address[]"
+                }],
                 "name": "removeTrustedContracts",
                 "outputs": [],
                 "payable": false,
@@ -1644,27 +1510,22 @@
             },
             {
                 "constant": true,
-                "inputs": [
-                    {
-                        "name": "",
-                        "type": "bytes32"
-                    }
-                ],
+                "inputs": [{
+                    "name": "",
+                    "type": "bytes32"
+                }],
                 "name": "withdrawn_balances",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "uint192"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "uint192"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_receiver_address",
                         "type": "address"
                     },
@@ -1687,26 +1548,27 @@
                 "constant": true,
                 "inputs": [],
                 "name": "version",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "string"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "string"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_receiver_address",
                         "type": "address"
                     },
                     {
                         "name": "_open_block_number",
                         "type": "uint32"
+                    },
+                    {
+                        "name": "_block_space_proof",
+                        "type": "bytes"
                     }
                 ],
                 "name": "settle",
@@ -1719,27 +1581,22 @@
                 "constant": true,
                 "inputs": [],
                 "name": "channel_deposit_bugbounty_limit",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "uint256"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "uint256"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": true,
-                "inputs": [
-                    {
-                        "name": "",
-                        "type": "bytes32"
-                    }
-                ],
+                "inputs": [{
+                    "name": "",
+                    "type": "bytes32"
+                }],
                 "name": "closing_requests",
-                "outputs": [
-                    {
+                "outputs": [{
                         "name": "closing_balance",
                         "type": "uint192"
                     },
@@ -1754,8 +1611,7 @@
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_sender_address",
                         "type": "address"
                     },
@@ -1780,15 +1636,12 @@
             },
             {
                 "constant": true,
-                "inputs": [
-                    {
-                        "name": "",
-                        "type": "bytes32"
-                    }
-                ],
+                "inputs": [{
+                    "name": "",
+                    "type": "bytes32"
+                }],
                 "name": "channels",
-                "outputs": [
-                    {
+                "outputs": [{
                         "name": "deposit",
                         "type": "uint192"
                     },
@@ -1803,8 +1656,7 @@
             },
             {
                 "constant": true,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_sender_address",
                         "type": "address"
                     },
@@ -1818,12 +1670,10 @@
                     }
                 ],
                 "name": "getKey",
-                "outputs": [
-                    {
-                        "name": "data",
-                        "type": "bytes32"
-                    }
-                ],
+                "outputs": [{
+                    "name": "data",
+                    "type": "bytes32"
+                }],
                 "payable": false,
                 "stateMutability": "pure",
                 "type": "function"
@@ -1832,24 +1682,20 @@
                 "constant": true,
                 "inputs": [],
                 "name": "owner_address",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "address"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "address"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
-                        "name": "_trusted_contracts",
-                        "type": "address[]"
-                    }
-                ],
+                "inputs": [{
+                    "name": "_trusted_contracts",
+                    "type": "address[]"
+                }],
                 "name": "addTrustedContracts",
                 "outputs": [],
                 "payable": false,
@@ -1858,27 +1704,22 @@
             },
             {
                 "constant": true,
-                "inputs": [
-                    {
-                        "name": "",
-                        "type": "address"
-                    }
-                ],
+                "inputs": [{
+                    "name": "",
+                    "type": "address"
+                }],
                 "name": "trusted_contracts",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "bool"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "bool"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_open_block_number",
                         "type": "uint32"
                     },
@@ -1899,8 +1740,7 @@
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_receiver_address",
                         "type": "address"
                     },
@@ -1917,8 +1757,7 @@
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_sender_address",
                         "type": "address"
                     },
@@ -1941,20 +1780,17 @@
                 "constant": true,
                 "inputs": [],
                 "name": "token",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "address"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "address"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_sender_address",
                         "type": "address"
                     },
@@ -1974,8 +1810,7 @@
                 "type": "function"
             },
             {
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_token_address",
                         "type": "address"
                     },
@@ -1994,8 +1829,7 @@
             },
             {
                 "anonymous": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "indexed": true,
                         "name": "_sender_address",
                         "type": "address"
@@ -2016,8 +1850,7 @@
             },
             {
                 "anonymous": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "indexed": true,
                         "name": "_sender_address",
                         "type": "address"
@@ -2043,8 +1876,7 @@
             },
             {
                 "anonymous": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "indexed": true,
                         "name": "_sender_address",
                         "type": "address"
@@ -2070,8 +1902,7 @@
             },
             {
                 "anonymous": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "indexed": true,
                         "name": "_sender_address",
                         "type": "address"
@@ -2102,8 +1933,7 @@
             },
             {
                 "anonymous": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "indexed": true,
                         "name": "_sender_address",
                         "type": "address"
@@ -2129,8 +1959,7 @@
             },
             {
                 "anonymous": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "indexed": true,
                         "name": "_trusted_contract_address",
                         "type": "address"
@@ -2157,11 +1986,9 @@
             },
             "language": "Solidity",
             "output": {
-                "abi": [
-                    {
+                "abi": [{
                         "constant": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_receiver_address",
                                 "type": "address"
                             },
@@ -2184,20 +2011,17 @@
                         "constant": true,
                         "inputs": [],
                         "name": "challenge_period",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "uint32"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "uint32"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
                     },
                     {
                         "constant": true,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_sender_address",
                                 "type": "address"
                             },
@@ -2211,8 +2035,7 @@
                             }
                         ],
                         "name": "getChannelInfo",
-                        "outputs": [
-                            {
+                        "outputs": [{
                                 "name": "",
                                 "type": "bytes32"
                             },
@@ -2239,8 +2062,7 @@
                     },
                     {
                         "constant": true,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_receiver_address",
                                 "type": "address"
                             },
@@ -2258,20 +2080,17 @@
                             }
                         ],
                         "name": "extractBalanceProofSignature",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "address"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "address"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
                     },
                     {
                         "constant": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_receiver_address",
                                 "type": "address"
                             },
@@ -2300,8 +2119,7 @@
                     },
                     {
                         "constant": true,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_sender_address",
                                 "type": "address"
                             },
@@ -2319,24 +2137,20 @@
                             }
                         ],
                         "name": "extractClosingSignature",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "address"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "address"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
                     },
                     {
                         "constant": false,
-                        "inputs": [
-                            {
-                                "name": "_trusted_contracts",
-                                "type": "address[]"
-                            }
-                        ],
+                        "inputs": [{
+                            "name": "_trusted_contracts",
+                            "type": "address[]"
+                        }],
                         "name": "removeTrustedContracts",
                         "outputs": [],
                         "payable": false,
@@ -2345,27 +2159,22 @@
                     },
                     {
                         "constant": true,
-                        "inputs": [
-                            {
-                                "name": "",
-                                "type": "bytes32"
-                            }
-                        ],
+                        "inputs": [{
+                            "name": "",
+                            "type": "bytes32"
+                        }],
                         "name": "withdrawn_balances",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "uint192"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "uint192"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
                     },
                     {
                         "constant": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_receiver_address",
                                 "type": "address"
                             },
@@ -2388,26 +2197,27 @@
                         "constant": true,
                         "inputs": [],
                         "name": "version",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "string"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "string"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
                     },
                     {
                         "constant": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_receiver_address",
                                 "type": "address"
                             },
                             {
                                 "name": "_open_block_number",
                                 "type": "uint32"
+                            },
+                            {
+                                "name": "_block_space_proof",
+                                "type": "bytes"
                             }
                         ],
                         "name": "settle",
@@ -2420,27 +2230,22 @@
                         "constant": true,
                         "inputs": [],
                         "name": "channel_deposit_bugbounty_limit",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "uint256"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "uint256"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
                     },
                     {
                         "constant": true,
-                        "inputs": [
-                            {
-                                "name": "",
-                                "type": "bytes32"
-                            }
-                        ],
+                        "inputs": [{
+                            "name": "",
+                            "type": "bytes32"
+                        }],
                         "name": "closing_requests",
-                        "outputs": [
-                            {
+                        "outputs": [{
                                 "name": "closing_balance",
                                 "type": "uint192"
                             },
@@ -2455,8 +2260,7 @@
                     },
                     {
                         "constant": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_sender_address",
                                 "type": "address"
                             },
@@ -2481,15 +2285,12 @@
                     },
                     {
                         "constant": true,
-                        "inputs": [
-                            {
-                                "name": "",
-                                "type": "bytes32"
-                            }
-                        ],
+                        "inputs": [{
+                            "name": "",
+                            "type": "bytes32"
+                        }],
                         "name": "channels",
-                        "outputs": [
-                            {
+                        "outputs": [{
                                 "name": "deposit",
                                 "type": "uint192"
                             },
@@ -2504,8 +2305,7 @@
                     },
                     {
                         "constant": true,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_sender_address",
                                 "type": "address"
                             },
@@ -2519,12 +2319,10 @@
                             }
                         ],
                         "name": "getKey",
-                        "outputs": [
-                            {
-                                "name": "data",
-                                "type": "bytes32"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "data",
+                            "type": "bytes32"
+                        }],
                         "payable": false,
                         "stateMutability": "pure",
                         "type": "function"
@@ -2533,24 +2331,20 @@
                         "constant": true,
                         "inputs": [],
                         "name": "owner_address",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "address"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "address"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
                     },
                     {
                         "constant": false,
-                        "inputs": [
-                            {
-                                "name": "_trusted_contracts",
-                                "type": "address[]"
-                            }
-                        ],
+                        "inputs": [{
+                            "name": "_trusted_contracts",
+                            "type": "address[]"
+                        }],
                         "name": "addTrustedContracts",
                         "outputs": [],
                         "payable": false,
@@ -2559,27 +2353,22 @@
                     },
                     {
                         "constant": true,
-                        "inputs": [
-                            {
-                                "name": "",
-                                "type": "address"
-                            }
-                        ],
+                        "inputs": [{
+                            "name": "",
+                            "type": "address"
+                        }],
                         "name": "trusted_contracts",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "bool"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "bool"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
                     },
                     {
                         "constant": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_open_block_number",
                                 "type": "uint32"
                             },
@@ -2600,8 +2389,7 @@
                     },
                     {
                         "constant": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_receiver_address",
                                 "type": "address"
                             },
@@ -2618,8 +2406,7 @@
                     },
                     {
                         "constant": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_sender_address",
                                 "type": "address"
                             },
@@ -2642,20 +2429,17 @@
                         "constant": true,
                         "inputs": [],
                         "name": "token",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "address"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "address"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
                     },
                     {
                         "constant": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_sender_address",
                                 "type": "address"
                             },
@@ -2675,8 +2459,7 @@
                         "type": "function"
                     },
                     {
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_token_address",
                                 "type": "address"
                             },
@@ -2695,8 +2478,7 @@
                     },
                     {
                         "anonymous": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "indexed": true,
                                 "name": "_sender_address",
                                 "type": "address"
@@ -2717,8 +2499,7 @@
                     },
                     {
                         "anonymous": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "indexed": true,
                                 "name": "_sender_address",
                                 "type": "address"
@@ -2744,8 +2525,7 @@
                     },
                     {
                         "anonymous": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "indexed": true,
                                 "name": "_sender_address",
                                 "type": "address"
@@ -2771,8 +2551,7 @@
                     },
                     {
                         "anonymous": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "indexed": true,
                                 "name": "_sender_address",
                                 "type": "address"
@@ -2803,8 +2582,7 @@
                     },
                     {
                         "anonymous": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "indexed": true,
                                 "name": "_sender_address",
                                 "type": "address"
@@ -2830,8 +2608,7 @@
                     },
                     {
                         "anonymous": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "indexed": true,
                                 "name": "_trusted_contract_address",
                                 "type": "address"
@@ -2915,10 +2692,11 @@
                                 "_trusted_contracts": "Array of contract addresses to be removed from the trusted_contracts mapping."
                             }
                         },
-                        "settle(address,uint32)": {
+                        "settle(address,uint32,bytes)": {
                             "params": {
                                 "_open_block_number": "The block number at which a channel between the sender and receiver was created.",
-                                "_receiver_address": "The address that receives tokens."
+                                "_receiver_address": "The address that receives tokens.",
+                                "_block_space_proof": "The RLP encoded list of uncongested block headers since the channel closed."
                             }
                         },
                         "tokenFallback(address,uint256,bytes)": {
@@ -2987,7 +2765,7 @@
                         "removeTrustedContracts(address[])": {
                             "notice": "Function for removing trusted contracts. Can only be called by owner_address."
                         },
-                        "settle(address,uint32)": {
+                        "settle(address,uint32,bytes)": {
                             "notice": "Function called by the sender after the challenge period has ended, in order to settle and delete the channel, in case the receiver has not closed the channel himself."
                         },
                         "tokenFallback(address,uint256,bytes)": {
@@ -3046,25 +2824,21 @@
         "source_path": "contracts/RaidenMicroTransferChannels.sol"
     },
     "StandardToken": {
-        "abi": [
-            {
+        "abi": [{
                 "constant": true,
                 "inputs": [],
                 "name": "name",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "string"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "string"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_spender",
                         "type": "address"
                     },
@@ -3074,12 +2848,10 @@
                     }
                 ],
                 "name": "approve",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "bool"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "bool"
+                }],
                 "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "function"
@@ -3088,20 +2860,17 @@
                 "constant": true,
                 "inputs": [],
                 "name": "totalSupply",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "uint256"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "uint256"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_from",
                         "type": "address"
                     },
@@ -3115,12 +2884,10 @@
                     }
                 ],
                 "name": "transferFrom",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "bool"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "bool"
+                }],
                 "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "function"
@@ -3129,31 +2896,25 @@
                 "constant": true,
                 "inputs": [],
                 "name": "decimals",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "uint8"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "uint8"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": true,
-                "inputs": [
-                    {
-                        "name": "_owner",
-                        "type": "address"
-                    }
-                ],
+                "inputs": [{
+                    "name": "_owner",
+                    "type": "address"
+                }],
                 "name": "balanceOf",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "uint256"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "uint256"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
@@ -3162,20 +2923,17 @@
                 "constant": true,
                 "inputs": [],
                 "name": "symbol",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "string"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "string"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_to",
                         "type": "address"
                     },
@@ -3185,20 +2943,17 @@
                     }
                 ],
                 "name": "transfer",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "bool"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "bool"
+                }],
                 "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "function"
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_to",
                         "type": "address"
                     },
@@ -3212,20 +2967,17 @@
                     }
                 ],
                 "name": "transfer",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "bool"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "bool"
+                }],
                 "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "function"
             },
             {
                 "constant": true,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_owner",
                         "type": "address"
                     },
@@ -3235,20 +2987,17 @@
                     }
                 ],
                 "name": "allowance",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "uint256"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "uint256"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "anonymous": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "indexed": true,
                         "name": "_from",
                         "type": "address"
@@ -3269,8 +3018,7 @@
             },
             {
                 "anonymous": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "indexed": true,
                         "name": "_owner",
                         "type": "address"
@@ -3302,25 +3050,21 @@
             },
             "language": "Solidity",
             "output": {
-                "abi": [
-                    {
+                "abi": [{
                         "constant": true,
                         "inputs": [],
                         "name": "name",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "string"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "string"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
                     },
                     {
                         "constant": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_spender",
                                 "type": "address"
                             },
@@ -3330,12 +3074,10 @@
                             }
                         ],
                         "name": "approve",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "bool"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "bool"
+                        }],
                         "payable": false,
                         "stateMutability": "nonpayable",
                         "type": "function"
@@ -3344,20 +3086,17 @@
                         "constant": true,
                         "inputs": [],
                         "name": "totalSupply",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "uint256"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "uint256"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
                     },
                     {
                         "constant": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_from",
                                 "type": "address"
                             },
@@ -3371,12 +3110,10 @@
                             }
                         ],
                         "name": "transferFrom",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "bool"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "bool"
+                        }],
                         "payable": false,
                         "stateMutability": "nonpayable",
                         "type": "function"
@@ -3385,31 +3122,25 @@
                         "constant": true,
                         "inputs": [],
                         "name": "decimals",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "uint8"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "uint8"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
                     },
                     {
                         "constant": true,
-                        "inputs": [
-                            {
-                                "name": "_owner",
-                                "type": "address"
-                            }
-                        ],
+                        "inputs": [{
+                            "name": "_owner",
+                            "type": "address"
+                        }],
                         "name": "balanceOf",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "uint256"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "uint256"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
@@ -3418,20 +3149,17 @@
                         "constant": true,
                         "inputs": [],
                         "name": "symbol",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "string"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "string"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
                     },
                     {
                         "constant": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_to",
                                 "type": "address"
                             },
@@ -3441,20 +3169,17 @@
                             }
                         ],
                         "name": "transfer",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "bool"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "bool"
+                        }],
                         "payable": false,
                         "stateMutability": "nonpayable",
                         "type": "function"
                     },
                     {
                         "constant": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_to",
                                 "type": "address"
                             },
@@ -3468,20 +3193,17 @@
                             }
                         ],
                         "name": "transfer",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "bool"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "bool"
+                        }],
                         "payable": false,
                         "stateMutability": "nonpayable",
                         "type": "function"
                     },
                     {
                         "constant": true,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "name": "_owner",
                                 "type": "address"
                             },
@@ -3491,20 +3213,17 @@
                             }
                         ],
                         "name": "allowance",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "uint256"
-                            }
-                        ],
+                        "outputs": [{
+                            "name": "",
+                            "type": "uint256"
+                        }],
                         "payable": false,
                         "stateMutability": "view",
                         "type": "function"
                     },
                     {
                         "anonymous": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "indexed": true,
                                 "name": "_from",
                                 "type": "address"
@@ -3525,8 +3244,7 @@
                     },
                     {
                         "anonymous": false,
-                        "inputs": [
-                            {
+                        "inputs": [{
                                 "indexed": true,
                                 "name": "_owner",
                                 "type": "address"
@@ -3655,25 +3373,21 @@
         "source_path": "contracts/test/StandardToken.sol"
     },
     "Token": {
-        "abi": [
-            {
+        "abi": [{
                 "constant": true,
                 "inputs": [],
                 "name": "name",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "string"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "string"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_spender",
                         "type": "address"
                     },
@@ -3683,12 +3397,10 @@
                     }
                 ],
                 "name": "approve",
-                "outputs": [
-                    {
-                        "name": "success",
-                        "type": "bool"
-                    }
-                ],
+                "outputs": [{
+                    "name": "success",
+                    "type": "bool"
+                }],
                 "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "function"
@@ -3697,20 +3409,17 @@
                 "constant": true,
                 "inputs": [],
                 "name": "totalSupply",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "uint256"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "uint256"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_from",
                         "type": "address"
                     },
@@ -3724,12 +3433,10 @@
                     }
                 ],
                 "name": "transferFrom",
-                "outputs": [
-                    {
-                        "name": "success",
-                        "type": "bool"
-                    }
-                ],
+                "outputs": [{
+                    "name": "success",
+                    "type": "bool"
+                }],
                 "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "function"
@@ -3738,31 +3445,25 @@
                 "constant": true,
                 "inputs": [],
                 "name": "decimals",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "uint8"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "uint8"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": true,
-                "inputs": [
-                    {
-                        "name": "_owner",
-                        "type": "address"
-                    }
-                ],
+                "inputs": [{
+                    "name": "_owner",
+                    "type": "address"
+                }],
                 "name": "balanceOf",
-                "outputs": [
-                    {
-                        "name": "balance",
-                        "type": "uint256"
-                    }
-                ],
+                "outputs": [{
+                    "name": "balance",
+                    "type": "uint256"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
@@ -3771,20 +3472,17 @@
                 "constant": true,
                 "inputs": [],
                 "name": "symbol",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "string"
-                    }
-                ],
+                "outputs": [{
+                    "name": "",
+                    "type": "string"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_to",
                         "type": "address"
                     },
@@ -3794,20 +3492,17 @@
                     }
                 ],
                 "name": "transfer",
-                "outputs": [
-                    {
-                        "name": "success",
-                        "type": "bool"
-                    }
-                ],
+                "outputs": [{
+                    "name": "success",
+                    "type": "bool"
+                }],
                 "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "function"
             },
             {
                 "constant": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_to",
                         "type": "address"
                     },
@@ -3821,20 +3516,17 @@
                     }
                 ],
                 "name": "transfer",
-                "outputs": [
-                    {
-                        "name": "success",
-                        "type": "bool"
-                    }
-                ],
+                "outputs": [{
+                    "name": "success",
+                    "type": "bool"
+                }],
                 "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "function"
             },
             {
                 "constant": true,
-                "inputs": [
-                    {
+                "inputs": [{
                         "name": "_owner",
                         "type": "address"
                     },
@@ -3844,20 +3536,17 @@
                     }
                 ],
                 "name": "allowance",
-                "outputs": [
-                    {
-                        "name": "remaining",
-                        "type": "uint256"
-                    }
-                ],
+                "outputs": [{
+                    "name": "remaining",
+                    "type": "uint256"
+                }],
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "anonymous": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "indexed": true,
                         "name": "_from",
                         "type": "address"
@@ -3878,8 +3567,7 @@
             },
             {
                 "anonymous": false,
-                "inputs": [
-                    {
+                "inputs": [{
                         "indexed": true,
                         "name": "_owner",
                         "type": "address"

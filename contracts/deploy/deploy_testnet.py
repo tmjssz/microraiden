@@ -52,6 +52,10 @@ from utils.utils import (
     '--token-address',
     help='Already deployed token address.'
 )
+@click.option(
+    '--oracle-address',
+    help='Already deployed congestion oracle address.'
+)
 def main(**kwargs):
     project = Project()
 
@@ -63,10 +67,11 @@ def main(**kwargs):
     token_decimals = kwargs['token_decimals']
     token_symbol = kwargs['token_symbol']
     token_address = kwargs['token_address']
+    oracle_address = kwargs['oracle_address']
     supply *= 10**(token_decimals)
     txn_wait = 250
 
-    assert challenge_period >= 500, 'Challenge period should be >= 500 blocks'
+    # assert challenge_period >= 500, 'Challenge period should be >= 500 blocks'
 
     if chain_name == 'rinkeby':
         txn_wait = 500
@@ -98,9 +103,20 @@ def main(**kwargs):
         token_address = to_checksum_address(token_address)
         print(token_name, 'address is', token_address)
 
+        oracle = chain.provider.get_contract_factory('CongestionOracle')
+
+        if not oracle_address:
+            txhash = oracle.deploy(transaction={'from': owner})
+            receipt = check_succesful_tx(chain.web3, txhash, txn_wait)
+            oracle_address = receipt['contractAddress']
+
+        assert oracle_address and is_address(oracle_address)
+        oracle_address = to_checksum_address(oracle_address)
+        print('CongestionOracle address is', oracle_address)
+
         microraiden_contract = chain.provider.get_contract_factory('RaidenMicroTransferChannels')
         txhash = microraiden_contract.deploy(
-            args=[token_address, challenge_period, []],
+            args=[token_address, oracle_address, challenge_period, []],
             transaction={'from': owner}
         )
         receipt = check_succesful_tx(chain.web3, txhash, txn_wait)

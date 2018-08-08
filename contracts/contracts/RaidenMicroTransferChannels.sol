@@ -2,6 +2,7 @@ pragma solidity ^0.4.17;
 
 import './Token.sol';
 import './lib/ECVerify.sol';
+import './oracle/CongestionOracle.sol';
 
 /// @title Raiden MicroTransfer Channels Contract.
 contract RaidenMicroTransferChannels {
@@ -29,6 +30,7 @@ contract RaidenMicroTransferChannels {
     uint256 public constant channel_deposit_bugbounty_limit = 10 ** 18 * 100;
 
     Token public token;
+    CongestionOracle public oracle;
 
     mapping (bytes32 => Channel) public channels;
     mapping (bytes32 => ClosingRequest) public closing_requests;
@@ -118,15 +120,19 @@ contract RaidenMicroTransferChannels {
     /// open and top up channels on behalf of a sender.
     function RaidenMicroTransferChannels(
         address _token_address,
+        address _oracle_address,
         uint32 _challenge_period,
         address[] _trusted_contracts)
         public
     {
         require(_token_address != 0x0);
+        require(_oracle_address != 0x0);
         require(addressHasCode(_token_address));
-        require(_challenge_period >= 500);
+        require(addressHasCode(_oracle_address));
+        require(_challenge_period >= 5);
 
         token = Token(_token_address);
+        oracle = CongestionOracle(_oracle_address);
 
         // Check if the contract is indeed a token contract
         require(token.totalSupply() > 0);
@@ -372,13 +378,23 @@ contract RaidenMicroTransferChannels {
         ChannelCloseRequested(msg.sender, _receiver_address, _open_block_number, _balance);
     }
 
+    /// @notice Checks wether the given list of RLP encoded block headers are valid and 
+    /// are not congested. 
+    /// @param _rlp_block_headers The RLP encoded block headers.
+    /// @return Wether the proof is valid
+    function checkBlockSpaceProof(bytes memory _rlp_block_headers) internal returns (bool) {
+        uint num_uncongested_blocks = oracle.numBlocksUncongested(_rlp_block_headers, 130000, 0);
+        return num_uncongested_blocks >= 1;
+    }
 
     /// @notice Function called by the sender after the challenge period has ended, in order to
     /// settle and delete the channel, in case the receiver has not closed the channel himself.
     /// @param _receiver_address The address that receives tokens.
     /// @param _open_block_number The block number at which a channel between
+    /// @param _block_space_proof RLP encoded list of block headers that prove a sufficient
+    /// available block space since the channel close.
     /// the sender and receiver was created.
-    function settle(address _receiver_address, uint32 _open_block_number) external {
+    function settle(address _receiver_address, uint32 _open_block_number, bytes _block_space_proof) external {
         bytes32 key = getKey(msg.sender, _receiver_address, _open_block_number);
 
         // Make sure an uncooperativeClose has been initiated
@@ -386,6 +402,10 @@ contract RaidenMicroTransferChannels {
 
         // Make sure the challenge_period has ended
 	    require(block.number > closing_requests[key].settle_block_number);
+
+        // uint min_block_number = closing_requests[key].settle_block_number - challenge_period;
+        bool valid_block_space_proof = checkBlockSpaceProof(_block_space_proof);
+        require(valid_block_space_proof, 'invalid block space proof given');
 
         settleChannel(msg.sender, _receiver_address, _open_block_number,
             closing_requests[key].closing_balance
