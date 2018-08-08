@@ -10,18 +10,17 @@ from eth_utils import decode_hex, encode_hex
 from munch import Munch
 from urllib3.exceptions import HTTPError
 from web3 import Web3
-from web3.contract import Contract
-from typing import List, Any
 from microraiden import HTTPHeaders
 from microraiden.client.channel import Channel
 from microraiden.utils import (
     privkey_to_addr,
     sign_transaction,
     get_event_blocking,
-    create_transaction_data,
 )
 
 log = logging.getLogger('channel_utils')
+
+min_free_gas = 130000
 
 
 def send_offchain_payment(channel, resource_url: str):
@@ -66,78 +65,6 @@ def create_signed_transaction(
     network_id = int(web3.version.network)
     sign_transaction(tx, private_key, network_id)
     return encode_hex(rlp.encode(tx))
-
-
-def create_signed_contract_transaction(
-        args: List[Any],
-        contract: Contract,
-        func_name: str,
-        private_key: str,
-        nonce: int=None,
-) -> str:
-    """
-    Creates a signed on-chain contract transaction compliant with EIP155.
-    """
-    data = create_transaction_data(contract, func_name, args)
-    return create_signed_transaction(
-        web3=contract.web3,
-        private_key=private_key,
-        to=contract.address,
-        data=data,
-        gas_limit=130000,
-        gas_price=30000000000,
-        nonce=nonce,
-    )
-
-
-def create_close_channel_transaction(channel, balance=None):
-    '''
-    Create an uncooperative channel close transaction with the given balance.
-    '''
-    if channel.state != Channel.State.open:
-        log.error('Channel must be open to request a close.')
-        return
-    log.info(
-        'Creating close transaction for channel to {} created at block #{}.'
-        .format(channel.receiver, channel.block)
-    )
-
-    if balance is not None:
-        channel.update_balance(balance)
-
-    return create_signed_contract_transaction(
-        args=[
-            channel.receiver,
-            channel.block,
-            channel.balance
-        ],
-        contract=channel.core.channel_manager,
-        func_name='uncooperativeClose',
-        private_key=channel.core.private_key,
-    )
-
-
-def create_settle_channel_transaction(channel):
-    '''
-    Create an settle channel close transaction.
-    '''
-    if channel.state != Channel.State.settling:
-        log.error('Channel must be in the settlement period to settle.')
-        return None
-    log.info(
-        'Creating settle transaction for channel to {} created at block #{}.'
-        .format(channel.receiver, channel.block)
-    )
-
-    return create_signed_contract_transaction(
-        args=[
-            channel.receiver,
-            channel.block
-        ],
-        contract=channel.core.channel_manager,
-        func_name='settle',
-        private_key=channel.core.private_key,
-    )
 
 
 def wait_for_open(channel, confirmations: int=0):
@@ -239,3 +166,74 @@ def wait_for_block_generation(web3, block_number):
                 # The given block number was generated.
                 return
         time.sleep(2)
+
+
+def get_valid_headers(web3, num):
+    block_headers = []
+    offset = 0
+
+    while len(block_headers) < num:
+        offset += 1
+        block_number = web3.eth.blockNumber - offset
+        if (block_number <= 0):
+            break
+
+        # Get the block.
+        block = web3.eth.getBlock(block_number)
+
+        # Check if block is congested.
+        gasFree = block.gasLimit - block.gasUsed
+        if gasFree < min_free_gas:
+            continue
+
+        header = get_block_header(block)
+        block_headers.append(header)
+
+    return block_headers
+
+
+def get_congested_headers(web3, num):
+    block_headers = []
+    offset = 0
+
+    while len(block_headers) < num:
+        offset += 1
+        block_number = web3.eth.blockNumber - offset
+        if (block_number <= 0):
+            break
+
+        # Get the block.
+        block = web3.eth.getBlock(block_number)
+
+        # Check if block is congested.
+        gasFree = block.gasLimit - block.gasUsed
+        if gasFree >= min_free_gas:
+            continue
+
+        header = get_block_header(block)
+        block_headers.append(header)
+
+    return block_headers
+
+
+def get_block_header(block):
+    '''
+    Returns a list containing all data from the given block's header.
+    '''
+    return [
+        block.parentHash,
+        block.sha3Uncles,
+        decode_hex(block.miner[2:]),
+        block.stateRoot,
+        block.transactionsRoot,
+        block.receiptsRoot,
+        block.logsBloom,
+        block.difficulty,
+        block.number,
+        block.gasLimit,
+        block.gasUsed,
+        block.timestamp,
+        block.extraData,
+        block.mixHash,
+        int(block.nonce.hex(), 16)
+    ]
