@@ -1,6 +1,6 @@
-eth-abi==0.5.0
-rlp>=0.4.3,<0.6.0
+eth-abi==1.1.1
+rlp==1.0.2
 ethereum<2.0.0,>=1.6.1
-web3==v4.0.0-beta.4
+web3==v4.5.0
 py-geth==v2.0.1
 click
