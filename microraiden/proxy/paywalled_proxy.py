@@ -5,6 +5,7 @@ from flask_restful import (
     Api,
 )
 
+
 from microraiden.channel_manager import (
     ChannelManager
 )

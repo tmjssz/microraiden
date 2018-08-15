@@ -42,20 +42,13 @@ class DynamicPriceResource(Expensive):
     help='The server\'s private key path.',
     type=str
 )
-@click.option(
-    '--rpcport',
-    default=8545,
-    help='Port of the RPC server',
-    type=int
-)
-def main(private_key: str, rpcport: int):
+def main(private_key: str):
     private_key = get_private_key(private_key)
-    run(private_key, rpcport)
+    run(private_key)
 
 
 def run(
         private_key: str,
-        rpcport: int,
         state_file_path: str = os.path.join(click.get_app_dir('microraiden'), 'echo_server.db'),
         channel_manager: ChannelManager = None,
         join_thread: bool = True
@@ -69,8 +62,7 @@ def run(
     #  - private key to use for receiving funds
     #  - file for storing state information (balance proofs)
     if channel_manager is None:
-        web3 = Web3(HTTPProvider("http://127.0.0.1:" + str(rpcport)))
-        # web3 = Web3(HTTPProvider(WEB3_PROVIDER_DEFAULT))
+        web3 = Web3(HTTPProvider(WEB3_PROVIDER_DEFAULT))
         NETWORK_CFG.set_defaults(int(web3.version.network))
         channel_manager = make_channel_manager(
             private_key,
