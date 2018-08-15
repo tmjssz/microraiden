@@ -6,6 +6,7 @@ __pycache__
 build/docs/
 docs/api/
 .cache
+.pytest_cache
 
 # ignore private keys
 *.pem
