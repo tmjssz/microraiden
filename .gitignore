@@ -96,3 +96,6 @@ tags
 
 # mac os
 .DS_Store
+
+# Visual Studio Code
+.vscode/
