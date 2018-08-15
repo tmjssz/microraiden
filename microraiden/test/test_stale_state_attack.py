@@ -7,7 +7,7 @@ from microraiden import Client
 from microraiden.channel_manager import ChannelManager
 from microraiden.client import Channel
 from microraiden.test.utils.spam import Spammer
-from microraiden.utils import get_logs
+from microraiden.utils import get_logs, create_signed_contract_transaction
 from web3 import Web3
 
 log = logging.getLogger(__name__)
@@ -138,6 +138,20 @@ def test_close_with_stale_state_during_congestion(
     if web3.eth.blockNumber >= settle_block:
         log.info('Settle block #%s is reached', settle_block)
 
+        # Send settle transaction.
+        settle_tx = create_signed_contract_transaction(
+            private_key=open_channel.core.private_key,
+            contract=open_channel.core.channel_manager,
+            func_name='settle',
+            args=[
+                open_channel.receiver,
+                open_channel.block,
+            ],
+            gas_price=22000000000,
+        )
+        settle_tx_hash = web3.eth.sendRawTransaction(settle_tx)
+        log.info('Sent settle transaction (tx=%s)', settle_tx_hash.hex())
+
     # Wait for the settle event again.
     while settled_event is None:
         settled_event = get_channel_event(
@@ -149,6 +163,7 @@ def test_close_with_stale_state_during_congestion(
 
     # Get address of account that settled the channel.
     settled_by_addr = settle_tx['from']
+    log.info('Settled by %s', settled_by_addr)
     is_settled_by_receiver = is_same_address(settled_by_addr, open_channel.receiver)
 
     # Determine which party settled the channel.
