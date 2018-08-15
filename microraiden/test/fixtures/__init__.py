@@ -5,4 +5,4 @@ from .web3 import *         # noqa
 from .channel_manager import *  # noqa
 from .proxy import *        # noqa
 from .accounts import *     # noqa
-from .spamming import *     # noqa
+from .spam import *     # noqa
