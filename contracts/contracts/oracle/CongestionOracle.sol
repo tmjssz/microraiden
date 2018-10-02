@@ -28,12 +28,19 @@ contract CongestionOracle {
     /// Store every valid reported block header mapped by its number. 
     mapping(uint => BlockHeader) reportedBlocks;
 
-
+    /// @notice Function verifies the given list of block headers and returns the number of 
+    /// uncongested blocks.
+    /// @param rlpHeaders RLP encoded list of block headers that shall be checked.
+    /// @param minGasFree The minimum amount of gas that must still be free in the block in
+    /// order to become approved as uncongested.
+    /// @param minBlockNumber The minimum block number to be approved as valid. Block headers
+    /// from the rlpHeaders parameter that have a smaller number are not counted, even if 
+    /// they have enough free space.
     function numBlocksUncongested(
         bytes memory rlpHeaders,
         uint minGasFree,
         uint minBlockNumber
-    ) public returns (uint) {
+    ) public view returns (uint) {
         if (minBlockNumber > block.number) {
             // Minimum block number is not yet existing.
             return 0;

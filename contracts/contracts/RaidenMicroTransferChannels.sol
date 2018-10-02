@@ -20,6 +20,15 @@ contract RaidenMicroTransferChannels {
     // and delete the channel.
     uint32 public challenge_period;
 
+    // Minimum number of uncongested block headers that the channel manager contract
+    // expects to be in a block space proof in order to settle an uncooperatively
+    // closed channel.
+    uint public min_uncongested_blocks;
+
+    // Minimum amount of gas that must not be used by transactions in a block in order
+    // to classify a block as uncongested.
+    uint public min_free_gas;
+
     // Contract semantic version
     string public constant version = '0.2.0';
 
@@ -122,7 +131,9 @@ contract RaidenMicroTransferChannels {
         address _token_address,
         address _oracle_address,
         uint32 _challenge_period,
-        address[] _trusted_contracts)
+        address[] _trusted_contracts,
+        uint _min_uncongested_blocks,
+        uint _min_free_gas)
         public
     {
         require(_token_address != 0x0);
@@ -138,6 +149,8 @@ contract RaidenMicroTransferChannels {
         require(token.totalSupply() > 0);
 
         challenge_period = _challenge_period;
+        min_uncongested_blocks = _min_uncongested_blocks;
+        min_free_gas = _min_free_gas;
         owner_address = msg.sender;
         addTrustedContracts(_trusted_contracts);
     }
@@ -378,15 +391,6 @@ contract RaidenMicroTransferChannels {
         ChannelCloseRequested(msg.sender, _receiver_address, _open_block_number, _balance);
     }
 
-    /// @notice Checks wether the given list of RLP encoded block headers are valid and 
-    /// are not congested. 
-    /// @param _rlp_block_headers The RLP encoded block headers.
-    /// @return Wether the proof is valid
-    function checkBlockSpaceProof(bytes memory _rlp_block_headers) internal returns (bool) {
-        uint num_uncongested_blocks = oracle.numBlocksUncongested(_rlp_block_headers, 130000, 0);
-        return num_uncongested_blocks >= 1;
-    }
-
     /// @notice Function called by the sender after the challenge period has ended, in order to
     /// settle and delete the channel, in case the receiver has not closed the channel himself.
     /// @param _receiver_address The address that receives tokens.
@@ -403,9 +407,10 @@ contract RaidenMicroTransferChannels {
         // Make sure the challenge_period has ended
 	    require(block.number > closing_requests[key].settle_block_number);
 
-        // uint min_block_number = closing_requests[key].settle_block_number - challenge_period;
-        bool valid_block_space_proof = checkBlockSpaceProof(_block_space_proof);
-        require(valid_block_space_proof, 'invalid block space proof given');
+        // Check wether the given list of RLP encoded block headers are valid and not congested
+        uint min_block_number = closing_requests[key].settle_block_number - challenge_period;
+        uint num_uncongested_blocks = oracle.numBlocksUncongested(_block_space_proof, min_free_gas, min_block_number);
+        require(num_uncongested_blocks >= min_uncongested_blocks, 'invalid block space proof given');
 
         settleChannel(msg.sender, _receiver_address, _open_block_number,
             closing_requests[key].closing_balance

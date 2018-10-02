@@ -115,7 +115,7 @@ def main(**kwargs):
 
         microraiden_contract = chain.provider.get_contract_factory('RaidenMicroTransferChannels')
         txhash = microraiden_contract.deploy(
-            args=[token_address, oracle_address, challenge_period, []],
+            args=[token_address, oracle_address, challenge_period, [], 3, 130000],
             transaction={'from': owner}
         )
         receipt = check_succesful_tx(chain.web3, txhash, txn_wait)
