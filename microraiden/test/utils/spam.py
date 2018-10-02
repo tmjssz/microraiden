@@ -68,7 +68,11 @@ class Spammer(gevent.Greenlet):
         self.num_sent = 0
 
     def get_transaction(self, index: int = 0) -> str:
-        if len(self.transactions) < index + 1:
+        '''
+        Returns the raw transaction at the given index from the list of loaded transactions.
+        If the index is not existing, None is returned.
+        '''
+        if (len(self.transactions) < index + 1) | (index < 0):
             return None
         return self.transactions[index]
 
@@ -78,7 +82,10 @@ class Spammer(gevent.Greenlet):
         else:
             log.info('Start sending spam transactions')
 
+        # Determine the first transaction nonce.
         first_send_nonce = self.first_nonce + self.offset
+
+        # Skip transactions with a too low nonce value.
         if first_send_nonce < self.nonce:
             skip_amount = self.nonce - first_send_nonce
             log.warning(
@@ -86,20 +93,15 @@ class Spammer(gevent.Greenlet):
             self.offset += skip_amount
 
         for i, raw_txn in enumerate(self.transactions):
-            # try:
-            #     txn_bytes = decode_hex(raw_txn)
-            #     txn = rlp.decode(txn_bytes, Transaction)
-            #     log.info(txn.network_id)
-            # except Exception as err:
-            #     log.error('failed to decode transaction: %s', err)
-            #     continue
-
+            # Stop spamming if do_run flag is set to false.
             if not self.do_run:
                 break
 
+            # Skip transactions that with an index smaller than the offset.
             if i < self.offset:
                 continue
 
+            # Send the transaction.
             try:
                 self.web3.eth.sendRawTransaction(raw_txn)
                 self.num_sent += 1

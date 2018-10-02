@@ -62,7 +62,12 @@ NETWORK_CONFIG_DEFAULTS = {
     ),
     # local private network
     15: NetworkConfig(
-        channel_manager_address='0xf25186B5081Ff5cE73482AD761DB0eB0d25abfBF',
+        channel_manager_address='0x9FBDa871d559710256a2502A2517b794B482Db40',
+        start_sync_block=0
+    ),
+    # local private network
+    16: NetworkConfig(
+        channel_manager_address='0x20c98EC1F25F86FF4B70539142374a11C55C35c7',
         start_sync_block=0
     ),
     # internal - used only with ethereum tester
