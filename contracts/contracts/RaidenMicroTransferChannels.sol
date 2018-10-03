@@ -20,13 +20,13 @@ contract RaidenMicroTransferChannels {
     // and delete the channel.
     uint32 public challenge_period;
 
-    // Minimum number of uncongested block headers that the channel manager contract
-    // expects to be in a block space proof in order to settle an uncooperatively
-    // closed channel.
+    // Minimum number of uncongested block headers that the channel
+    // manager contract expects to be in a block space proof in
+    // order to settle an uncooperatively closed channel.
     uint public min_uncongested_blocks;
 
-    // Minimum amount of gas that must not be used by transactions in a block in order
-    // to classify a block as uncongested.
+    // Minimum amount of gas that must not be used by transactions in
+    // a block in order to classify a block as uncongested.
     uint public min_free_gas;
 
     // Contract semantic version
@@ -407,7 +407,8 @@ contract RaidenMicroTransferChannels {
         // Make sure the challenge_period has ended
 	    require(block.number > closing_requests[key].settle_block_number);
 
-        // Check wether the given list of RLP encoded block headers are valid and not congested
+        // Check wether the given list of RLP encoded block headers
+		// are valid and not congested
         uint min_block_number = closing_requests[key].settle_block_number - challenge_period;
         uint num_uncongested_blocks = oracle.numBlocksUncongested(_block_space_proof, min_free_gas, min_block_number);
         require(num_uncongested_blocks >= min_uncongested_blocks, 'invalid block space proof given');
