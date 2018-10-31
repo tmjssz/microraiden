@@ -28,6 +28,11 @@ from utils.utils import (
     help='Challenge period in number of blocks.'
 )
 @click.option(
+    '--num-proof-blocks',
+    default=3,
+    help='Minimum number of uncongested blocks that are required in a block space proof.'
+)
+@click.option(
     '--supply',
     default=10000000,
     help='Token contract supply (number of total issued tokens).'
@@ -61,6 +66,7 @@ def main(**kwargs):
     chain_name = kwargs['chain']
     owner = kwargs['owner']
     challenge_period = kwargs['challenge_period']
+    num_proof_blocks = kwargs['num_proof_blocks']
     supply = kwargs['supply']
     token_name = kwargs['token_name']
     token_decimals = kwargs['token_decimals']
@@ -90,6 +96,7 @@ def main(**kwargs):
 
         token = chain.provider.get_contract_factory('CustomToken')
 
+        receipt = None
         if not token_address:
             txhash = token.deploy(
                 args=[supply, token_name, token_symbol, token_decimals],
@@ -102,26 +109,37 @@ def main(**kwargs):
         token_address = to_checksum_address(token_address)
         print(token_name, 'address is', token_address)
 
+        if receipt is not None:
+            print('Gas used', str(receipt['gasUsed']))
+
         oracle = chain.provider.get_contract_factory('CongestionOracle')
 
+        receipt = None
         if not oracle_address:
             txhash = oracle.deploy(transaction={'from': owner})
             receipt = check_succesful_tx(chain.web3, txhash, txn_wait)
             oracle_address = receipt['contractAddress']
 
+            # Get the amount of used gas for the contract deployment.
+            gas_used = receipt['gasUsed']
+
         assert oracle_address and is_address(oracle_address)
         oracle_address = to_checksum_address(oracle_address)
         print('CongestionOracle address is', oracle_address)
 
+        if receipt is not None:
+            print('Gas used', str(receipt['gasUsed']))
+
         microraiden_contract = chain.provider.get_contract_factory('RaidenMicroTransferChannels')
         txhash = microraiden_contract.deploy(
-            args=[token_address, oracle_address, challenge_period, [], 3, 130000],
+            args=[token_address, oracle_address, challenge_period, [], num_proof_blocks, 130000],
             transaction={'from': owner}
         )
         receipt = check_succesful_tx(chain.web3, txhash, txn_wait)
         microraiden_address = receipt['contractAddress']
 
         print('RaidenMicroTransferChannels address is', microraiden_address)
+        print('Gas used', str(receipt['gasUsed']))
 
 
 if __name__ == '__main__':
