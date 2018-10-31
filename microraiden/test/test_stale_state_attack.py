@@ -27,7 +27,7 @@ block_space_proof = True
 @pytest.fixture(scope='session')
 def channel_manager_address():
     if block_space_proof:
-        return '0x9FBDa871d559710256a2502A2517b794B482Db40'
+        return '0xFB88dE099e13c3ED21F80a7a1E49f8CAEcF10df6'
     else:
         return '0x8f0483125FCb9aaAEFA9209D8E9d7b9C8B9Fb90F'
 

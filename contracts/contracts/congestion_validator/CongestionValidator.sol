@@ -4,14 +4,14 @@ import "./lib/RLP.sol";
 import "./lib/ArrayUint.sol";
 
 /**
- * @title CongestionOracle
+ * @title CongestionValidator
  * 
- * CongestionOracle can be used by microraiden to prevent stale state attacks in 
+ * CongestionValidator can be used by microraiden to prevent stale state attacks in 
  * congested networks.
  * 
  * @author Tim-Jonas Schwarz (tmjssz@gmail.com)
  */
-contract CongestionOracle {
+contract CongestionValidator {
 
     using RLP for RLP.RLPItem;
     using RLP for bytes;

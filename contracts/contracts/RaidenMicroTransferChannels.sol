@@ -2,7 +2,7 @@ pragma solidity ^0.4.17;
 
 import './Token.sol';
 import './lib/ECVerify.sol';
-import './oracle/CongestionOracle.sol';
+import './congestion_validator/CongestionValidator.sol';
 
 /// @title Raiden MicroTransfer Channels Contract.
 contract RaidenMicroTransferChannels {
@@ -39,7 +39,7 @@ contract RaidenMicroTransferChannels {
     uint256 public constant channel_deposit_bugbounty_limit = 10 ** 18 * 100;
 
     Token public token;
-    CongestionOracle public oracle;
+    CongestionValidator public congestion_validator;
 
     mapping (bytes32 => Channel) public channels;
     mapping (bytes32 => ClosingRequest) public closing_requests;
@@ -129,7 +129,7 @@ contract RaidenMicroTransferChannels {
     /// open and top up channels on behalf of a sender.
     function RaidenMicroTransferChannels(
         address _token_address,
-        address _oracle_address,
+        address _congestion_validator_address,
         uint32 _challenge_period,
         address[] _trusted_contracts,
         uint _min_uncongested_blocks,
@@ -137,13 +137,13 @@ contract RaidenMicroTransferChannels {
         public
     {
         require(_token_address != 0x0);
-        require(_oracle_address != 0x0);
+        require(_congestion_validator_address != 0x0);
         require(addressHasCode(_token_address));
-        require(addressHasCode(_oracle_address));
+        require(addressHasCode(_congestion_validator_address));
         require(_challenge_period >= 5);
 
         token = Token(_token_address);
-        oracle = CongestionOracle(_oracle_address);
+        congestion_validator = CongestionValidator(_congestion_validator_address);
 
         // Check if the contract is indeed a token contract
         require(token.totalSupply() > 0);
@@ -410,7 +410,7 @@ contract RaidenMicroTransferChannels {
         // Check wether the given list of RLP encoded block headers
 		// are valid and not congested
         uint min_block_number = closing_requests[key].settle_block_number - challenge_period;
-        uint num_uncongested_blocks = oracle.numBlocksUncongested(_block_space_proof, min_free_gas, min_block_number);
+        uint num_uncongested_blocks = congestion_validator.numBlocksUncongested(_block_space_proof, min_free_gas, min_block_number);
         require(num_uncongested_blocks >= min_uncongested_blocks, 'invalid block space proof given');
 
         settleChannel(msg.sender, _receiver_address, _open_block_number,

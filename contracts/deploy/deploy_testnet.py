@@ -57,8 +57,8 @@ from utils.utils import (
     help='Already deployed token address.'
 )
 @click.option(
-    '--oracle-address',
-    help='Already deployed congestion oracle address.'
+    '--congestion-validator-address',
+    help='Already deployed congestion validator contract address.'
 )
 def main(**kwargs):
     project = Project()
@@ -72,7 +72,7 @@ def main(**kwargs):
     token_decimals = kwargs['token_decimals']
     token_symbol = kwargs['token_symbol']
     token_address = kwargs['token_address']
-    oracle_address = kwargs['oracle_address']
+    congestion_validator_address = kwargs['congestion_validator_address']
     supply *= 10**(token_decimals)
     txn_wait = 250
 
@@ -112,27 +112,27 @@ def main(**kwargs):
         if receipt is not None:
             print('Gas used', str(receipt['gasUsed']))
 
-        oracle = chain.provider.get_contract_factory('CongestionOracle')
+        congestion_validator = chain.provider.get_contract_factory('CongestionValidator')
 
         receipt = None
-        if not oracle_address:
-            txhash = oracle.deploy(transaction={'from': owner})
+        if not congestion_validator_address:
+            txhash = congestion_validator.deploy(transaction={'from': owner})
             receipt = check_succesful_tx(chain.web3, txhash, txn_wait)
-            oracle_address = receipt['contractAddress']
+            congestion_validator_address = receipt['contractAddress']
 
             # Get the amount of used gas for the contract deployment.
             gas_used = receipt['gasUsed']
 
-        assert oracle_address and is_address(oracle_address)
-        oracle_address = to_checksum_address(oracle_address)
-        print('CongestionOracle address is', oracle_address)
+        assert congestion_validator_address and is_address(congestion_validator_address)
+        congestion_validator_address = to_checksum_address(congestion_validator_address)
+        print('CongestionValidator address is', congestion_validator_address)
 
         if receipt is not None:
             print('Gas used', str(receipt['gasUsed']))
 
         microraiden_contract = chain.provider.get_contract_factory('RaidenMicroTransferChannels')
         txhash = microraiden_contract.deploy(
-            args=[token_address, oracle_address, challenge_period, [], num_proof_blocks, 130000],
+            args=[token_address, congestion_validator_address, challenge_period, [], num_proof_blocks, 130000],
             transaction={'from': owner}
         )
         receipt = check_succesful_tx(chain.web3, txhash, txn_wait)
