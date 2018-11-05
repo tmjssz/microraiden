@@ -20,13 +20,15 @@ from web3 import Web3
 log = logging.getLogger(__name__)
 
 GREEN = '\033[92m'
+LIGHT_GREY = '\033[37m'
 RED = '\033[91m'
+YELLOW = '\033[93m'
 COLOR_END = '\033[0m'
 
 
 @pytest.fixture(scope='session')
 def use_block_space_proof() -> bool:
-    return False
+    return True
 
 # @pytest.fixture(scope='session', params=[False, True])
 # def use_block_space_proof(request) -> bool:
@@ -35,7 +37,7 @@ def use_block_space_proof() -> bool:
 
 @pytest.fixture(scope='session')
 def num_spam_transactions() -> int:
-    return 7540
+    return 8000
 
 
 @pytest.fixture(scope='session')
@@ -51,7 +53,7 @@ def channel_manager_address(use_block_space_proof: bool):
     if use_block_space_proof:
         return '0x30753E4A8aad7F8597332E813735Def5dD395028'
     else:
-        return '0xAa588d3737B611baFD7bD713445b314BD453a5C8'
+        return '0x4E72770760c011647D4873f60A3CF6cDeA896CD8'
 
 
 @pytest.fixture(scope='session')
@@ -69,8 +71,8 @@ def channel_manager(
         token_contract,
         state_db_path,
 ):
-    rpc = HTTPProvider('http://127.0.0.1:9545')
-    # rpc = HTTPProvider('http://13.236.178.130:8545')
+    # rpc = HTTPProvider('http://127.0.0.1:9546')
+    rpc = HTTPProvider('http://13.55.208.135:8545')
     web3 = Web3(rpc)
 
     manager = ChannelManager(
@@ -302,7 +304,7 @@ def test_close_with_stale_state_during_congestion(
         # Log some info about the block.
         log.info(
             '%s#%s\t%s\t%s\t\t%s\t\t%s\t\t%s%s',
-            RED if is_congested else GREEN,
+            YELLOW if is_congested else LIGHT_GREY,
             block['number'],
             num_tx,
             block['gasUsed'],
@@ -391,7 +393,7 @@ def test_uncooperative_close(
                 # Log some info about the block.
                 log.info(
                     '%s#%s\t%s\t%s\t\t%s %%%s',
-                    RED if is_congested else GREEN,
+                    YELLOW if is_congested else LIGHT_GREY,
                     block['number'],
                     num_tx,
                     gas_free,
