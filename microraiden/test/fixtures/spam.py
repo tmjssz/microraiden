@@ -37,7 +37,10 @@ def min_free_gas() -> int:
 
 
 @pytest.fixture(scope='session')
-def spammer(web3: Web3) -> Spammer:
+def spammer(
+    web3: Web3,
+    num_spam_transactions: int
+) -> Spammer:
     input_file = os.path.join(
         constants.MICRORAIDEN_DIR,
         'microraiden',
@@ -49,6 +52,7 @@ def spammer(web3: Web3) -> Spammer:
     spam = Spammer(
         web3=web3,
         input_file=input_file,
+        num=num_spam_transactions - 1,
         offset=1,
     )
     spam.start()
