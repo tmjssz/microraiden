@@ -395,10 +395,10 @@ contract RaidenMicroTransferChannels {
     /// settle and delete the channel, in case the receiver has not closed the channel himself.
     /// @param _receiver_address The address that receives tokens.
     /// @param _open_block_number The block number at which a channel between
-    /// @param _block_space_proof RLP encoded list of block headers that prove a sufficient
+    /// @param _block_reference RLP encoded list of block headers that attest a sufficient
     /// available block space since the channel close.
     /// the sender and receiver was created.
-    function settle(address _receiver_address, uint32 _open_block_number, bytes _block_space_proof) external {
+    function settle(address _receiver_address, uint32 _open_block_number, bytes _block_reference) external {
         bytes32 key = getKey(msg.sender, _receiver_address, _open_block_number);
 
         // Make sure an uncooperativeClose has been initiated
@@ -410,8 +410,8 @@ contract RaidenMicroTransferChannels {
         // Check wether the given list of RLP encoded block headers
 		// are valid and not congested
         uint min_block_number = closing_requests[key].settle_block_number - challenge_period;
-        uint num_uncongested_blocks = congestion_validator.numBlocksUncongested(_block_space_proof, min_free_gas, min_block_number);
-        require(num_uncongested_blocks >= min_uncongested_blocks, 'invalid block space proof given');
+        uint num_uncongested_blocks = congestion_validator.numBlocksUncongested(_block_reference, min_free_gas, min_block_number);
+        require(num_uncongested_blocks >= min_uncongested_blocks, 'invalid block reference given');
 
         settleChannel(msg.sender, _receiver_address, _open_block_number,
             closing_requests[key].closing_balance

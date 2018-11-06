@@ -28,7 +28,7 @@ COLOR_END = '\033[0m'
 
 @pytest.fixture(scope='session')
 def use_block_space_proof() -> bool:
-    return True
+    return False
 
 # @pytest.fixture(scope='session', params=[False, True])
 # def use_block_space_proof(request) -> bool:
@@ -42,7 +42,7 @@ def num_spam_transactions() -> int:
 
 @pytest.fixture(scope='session')
 def web3(use_tester: bool, faucet_private_key: str, faucet_address: str, mine_sync_event):
-    rpc = HTTPProvider('http://127.0.0.1:8545')
+    rpc = HTTPProvider('http://127.0.0.1:9545')
     web3 = Web3(rpc)
     NETWORK_CFG.set_defaults(int(web3.version.network))
     yield web3
@@ -53,7 +53,7 @@ def channel_manager_address(use_block_space_proof: bool):
     if use_block_space_proof:
         return '0x30753E4A8aad7F8597332E813735Def5dD395028'
     else:
-        return '0x4E72770760c011647D4873f60A3CF6cDeA896CD8'
+        return '0x9FBDa871d559710256a2502A2517b794B482Db40'
 
 
 @pytest.fixture(scope='session')
@@ -71,8 +71,8 @@ def channel_manager(
         token_contract,
         state_db_path,
 ):
-    # rpc = HTTPProvider('http://127.0.0.1:9546')
-    rpc = HTTPProvider('http://13.55.208.135:8545')
+    rpc = HTTPProvider('http://127.0.0.1:9546')
+    # rpc = HTTPProvider('http://13.55.208.135:8545')
     web3 = Web3(rpc)
 
     manager = ChannelManager(
