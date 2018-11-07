@@ -82,7 +82,7 @@ def main(**kwargs):
     supply *= 10**(token_decimals)
     txn_wait = 250
 
-    assert challenge_period >= 5, 'Challenge period should be >= 500 blocks'
+    assert challenge_period >= 5, 'Challenge period should be >= 5 blocks'
 
     if chain_name == 'rinkeby':
         txn_wait = 500
