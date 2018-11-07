@@ -28,11 +28,6 @@ from utils.utils import (
     help='Challenge period in number of blocks.'
 )
 @click.option(
-    '--num-proof-blocks',
-    default=3,
-    help='Minimum number of uncongested blocks that are required in a block space proof.'
-)
-@click.option(
     '--supply',
     default=10000000,
     help='Token contract supply (number of total issued tokens).'
@@ -57,8 +52,18 @@ from utils.utils import (
     help='Already deployed token address.'
 )
 @click.option(
+    '--min-uncongested-blocks',
+    default=3,
+    help='Minimum number of uncongested blocks that the congestion validator expects in a valid block reference.'
+)
+@click.option(
+    '--min-free-gas',
+    default=130000,
+    help='Minimum unused gas amount in a block to be classified as "uncongested" by the congestion validator.'
+)
+@click.option(
     '--congestion-validator-address',
-    help='Already deployed congestion validator contract address.'
+    help='Contract address of the deployed congestion validator.'
 )
 def main(**kwargs):
     project = Project()
@@ -66,12 +71,13 @@ def main(**kwargs):
     chain_name = kwargs['chain']
     owner = kwargs['owner']
     challenge_period = kwargs['challenge_period']
-    num_proof_blocks = kwargs['num_proof_blocks']
     supply = kwargs['supply']
     token_name = kwargs['token_name']
     token_decimals = kwargs['token_decimals']
     token_symbol = kwargs['token_symbol']
     token_address = kwargs['token_address']
+    min_uncongested_blocks = kwargs['min_uncongested_blocks']
+    min_free_gas = kwargs['min_free_gas']
     congestion_validator_address = kwargs['congestion_validator_address']
     supply *= 10**(token_decimals)
     txn_wait = 250
@@ -132,7 +138,8 @@ def main(**kwargs):
 
         microraiden_contract = chain.provider.get_contract_factory('RaidenMicroTransferChannels')
         txhash = microraiden_contract.deploy(
-            args=[token_address, congestion_validator_address, challenge_period, [], num_proof_blocks, 130000],
+            args=[token_address, congestion_validator_address,
+                  challenge_period, [], min_uncongested_blocks, min_free_gas],
             transaction={'from': owner}
         )
         receipt = check_succesful_tx(chain.web3, txhash, txn_wait)

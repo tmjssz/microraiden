@@ -122,11 +122,17 @@ contract RaidenMicroTransferChannels {
 
     /// @notice Constructor for creating the uRaiden microtransfer channels contract.
     /// @param _token_address The address of the Token used by the uRaiden contract.
+    /// @param _congestion_validator_address The address of the CongestionValidator used by 
+    /// the uRaiden contract to validate block references.
     /// @param _challenge_period A fixed number of blocks representing the challenge period.
     /// We enforce a minimum of 500 blocks waiting period.
     /// after a sender requests the closing of the channel without the receiver's signature.
     /// @param _trusted_contracts Array of contract addresses that can be trusted to
     /// open and top up channels on behalf of a sender.
+    /// @param _min_uncongested_blocks Minimum number of uncongested blocks that the 
+    /// congestion validator expects in a valid block reference.
+    /// @param _min_free_gas Minimum unused gas amount in a block to be classified as 
+    /// 'uncongested' by the congestion validator.
     function RaidenMicroTransferChannels(
         address _token_address,
         address _congestion_validator_address,
